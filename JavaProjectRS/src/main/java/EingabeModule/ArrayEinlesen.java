@@ -46,6 +46,7 @@ public class ArrayEinlesen {
 		 ObjectInputStream is;
 		 String [][] katalogArray;
 	     try {
+	    	 System.out.println("sadsa");
 	         is = new ObjectInputStream(new FileInputStream("katalog.txt"));
 	         katalogArray = (String[][]) is.readObject();
 	         is.close();
@@ -53,6 +54,7 @@ public class ArrayEinlesen {
 
 	     }
 	     catch (Exception e) {
+	    	 System.out.println("wHY");
 	         return null;
 	     }
 	  } 
