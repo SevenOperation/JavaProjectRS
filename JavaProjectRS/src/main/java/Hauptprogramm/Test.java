@@ -32,7 +32,6 @@ public class Test {
     //@Produces({MediaType.TEXT_HTML})
     public Response einloggen(@FormParam("vn") String vorname ,@FormParam("nn") String nachname) throws Exception{
     	//uberpurefung des Namens kommt noch
-    	System.out.println("Test");
     	if(vorname.equals("Seven")) { //SpaeterUeberpruefungsmethode
     	Response r = Response.seeOther(new URI("/FerienWohnungVerwaltung/buchen")).build();
     	return r;

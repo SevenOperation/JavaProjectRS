@@ -1,13 +1,7 @@
 package EingabeModule;
 
-import java.io.EOFException;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.nio.file.FileSystemNotFoundException;
 
 
 public class ArrayEinlesen {
@@ -46,7 +40,7 @@ public class ArrayEinlesen {
 		 ObjectInputStream is;
 		 String [][] katalogArray;
 	     try {
-	    	 System.out.println("sadsa");
+	    	 System.out.println("Session begin");
 	         is = new ObjectInputStream(new FileInputStream("katalog.txt"));
 	         katalogArray = (String[][]) is.readObject();
 	         is.close();
