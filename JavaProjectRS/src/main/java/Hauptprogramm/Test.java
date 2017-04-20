@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.FormParam;
@@ -22,6 +23,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import EingabeModule.ArrayEinlesen;
+import EingabeModule.Benutzer;
 import EingabeModule.Buchen;
 import EingabeModule.Wohnung;
 
@@ -30,25 +32,47 @@ public class Test {
 	String cfp = "/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Homepage.html";
 	String[][] katalog = ArrayEinlesen.readKatalog();
 	String[][][] wohnungen = ArrayEinlesen.readWohnungen();
+	String[][] benutzer = ArrayEinlesen.readBenutzer();
 
 	@GET
 	@Produces({ MediaType.TEXT_HTML })
-	public FileInputStream testA(@CookieParam("LoginData") String logindata) throws FileNotFoundException {
-		if(logedIn(logindata)){
-			try {
-				File tmp = File.createTempFile("buchen", ".html");
-				FileWriter fw;
-				fw = new FileWriter(tmp);
-				fw.write(searchResults());
-				fw.close();
-				return new FileInputStream(tmp);	
-			} catch (IOException e) {
-				File file = new File(cfp);
-				return new FileInputStream(file);	
-			}
-		}else{
+	public FileInputStream testA() throws FileNotFoundException {
 			File file = new File(cfp);
 			return new FileInputStream(file);	
+	}
+	
+	@GET
+	@Produces({ MediaType.TEXT_HTML })
+	@Path("/logIn")
+	public FileInputStream logIn(@CookieParam("LoginData") String logindata) throws FileNotFoundException {
+		cfp = "/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Login.html";
+			File file = new File(cfp);
+			return new FileInputStream(file);	
+	}
+	@GET
+	@Produces({ MediaType.TEXT_HTML })
+	@Path("/registrieren")
+	public FileInputStream registrieren() throws FileNotFoundException {
+		cfp = "/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Registrieren.html";
+			File file = new File(cfp);
+			return new FileInputStream(file);	
+	}
+	
+	@POST
+	@Path("/registrieren")
+	public Response registrieren(@FormParam("vn") String vorname, @FormParam("nn") String nachname, @FormParam("ad") String adresse ) throws Exception {
+		//Uberpruefung der Daten fehlt
+		int l = benutzer.length;
+		benutzer = Benutzer.benutzerRegistrieren(benutzer, vorname, nachname, adresse);
+		if(l < benutzer.length){
+		ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung"));
+		NewCookie user = new NewCookie("LoginData", vorname + "-" + nachname + "-" + "true");
+		Response r = rb.cookie(user).build();
+		return r;
+		}else{
+		ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung/registrieren"));
+		Response r = rb.build();
+		return r;
 		}
 	}
     
@@ -59,8 +83,7 @@ public class Test {
 			@CookieParam("LoginData") String logindata) throws Exception {
 		// uberpurefung des Namens kommt noch
 		if (!logedIn(logindata)) { //Kontrolliert die cookie daten
-			if (vorname.equals("Seven")) { // SpaeterUeberpruefungsmethode
-				ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung/buchen"));
+				ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung"));
 				NewCookie user = new NewCookie("LoginData", vorname + "-" + nachname + "-" + "true");
 				Response r = rb.cookie(user).build();
 				return r;
@@ -70,11 +93,6 @@ public class Test {
 				Response r = rb.cookie(user).build();
 				return r;
 			}
-		}
-		ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung/WohnungAnlegen"));
-		Response r = rb.build();
-		return r;
-
 	}
 
 	@POST
@@ -102,13 +120,49 @@ public class Test {
 		return forbidden();
 
 	}
+	@POST
+	@Path("/buchen")
+	@Produces({ MediaType.TEXT_HTML })
+	public String suchErgebnisse(@FormParam("von") String von, @FormParam("bis") String bis) {
+		String html;
+        String[][] gesuchteHaueser = null;//Methode Fehlt
+		html = "<!DOCTYPE html>" + "\n<html>" + "\n<head>" + "\n<meta charset='UTF-8'>"
+				+ "\n<title>Insert title here</title>" + "\n</head>" + "\n<body>"
+				+ "\n<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>"
+				+ "\n<script type='text/javascript'> " + "\n function mybooking(id){"
+				+ "\n var req = $('<form action=/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnung method=POST><input type=hidden name=wohnung value='+id+'></input></form>');"
+				+ "\nvar t = $(req);" + "\n$('body').append(req);" + "\n$(req).submit();" + "\n}" + "\n</script>"
+				+ "\n<table border='1' align='center'>";
+		for (int i = 0; i < gesuchteHaueser.length; i++) {
+			html += "\n<tr>";
+			for (int x = 0; x < 4; x++) {
+				if (x == 3) {
+					html += "\n<td><button id='" + i + "' onclick='mybooking(this.id)'><img src=" + gesuchteHaueser[i][x]
+							+ " width='190' height='108'></button></td>";
+				} else {
+					html += "\n<td>" + gesuchteHaueser[i][x] + "</td>";
+				}
+			}
+			html += "\n</tr>";
+		}
+		html += "\n</table>"
+				+ "\n <form method='POST' action=''>"
+				+ "\n<p>Von:<input id='von' name='von' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
+				+ "\n<p>Bis:<input id='bis' name='bis' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
+				+ "\n<button>Suchen</button"
+				+ "\n</form>"
+				+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>" + "\n</body>"
+				+ "\n</html>";
+		System.out.println(html);
 
+		return html;
+	}
+		
 	@GET
 	@Path("/buchen")
 	@Produces({ MediaType.TEXT_HTML })
-	public String searchResults() {
+	public String wohnungenAnzeige() {
 		String html;
-
 		html = "<!DOCTYPE html>" + "\n<html>" + "\n<head>" + "\n<meta charset='UTF-8'>"
 				+ "\n<title>Insert title here</title>" + "\n</head>" + "\n<body>"
 				+ "\n<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>"
@@ -117,7 +171,10 @@ public class Test {
 				+ "\nvar t = $(req);" + "\n$('body').append(req);" + "\n$(req).submit();" + "\n}" + "\n</script>"
 				+ "\n<table border='1' align='center'>";
 		for (int i = 0; i < katalog.length; i++) {
-			html += "\n<tr>";
+			html += "\n<tr>"
+					+ "\n<td>"
+					+ "\n<p>Hausnummer:"+  ( i + 1 )  +"</p>"
+					+ "\n</td>";
 			for (int x = 0; x < 4; x++) {
 				if (x == 3) {
 					html += "\n<td><button id='" + i + "' onclick='mybooking(this.id)'><img src=" + katalog[i][x]
@@ -129,7 +186,11 @@ public class Test {
 			html += "\n</tr>";
 		}
 		html += "\n</table>"
-				// + "\n</form>"
+				+ "\n <form method='POST' action=''>"
+				+ "\n<p>Von:<input id='von' name='von' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
+				+ "\n<p>Bis:<input id='bis' name='bis' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
+				+ "\n<button>Suchen</button"
+				+ "\n</form>"
 				+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>" + "\n</body>"
 				+ "\n</html>";
 		System.out.println(html);

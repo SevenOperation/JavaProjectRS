@@ -3,8 +3,9 @@ package EingabeModule;
 import AusgabeModule.ArraySpeichern;
 
 public class Benutzer {
-    //Fügt durch vegrößerung des Arrays einen benutzer in das Array hinzu, gibt ein array zurück da array vielleicht noch nicht initzialisiert ist
+    //Fï¿½gt durch vegrï¿½ï¿½erung des Arrays einen benutzer in das Array hinzu, gibt ein array zurï¿½ck da array vielleicht noch nicht initzialisiert ist
 	public static String[][] benutzerRegistrieren(String[][] benutzer, String vorname, String nachname, String adresse){
+		//Uberpruefung ob Benutzer schon eingetragen ist fehlt;
 		if(benutzer == null){
 			benutzer = new String[1][3];
 		 }else{

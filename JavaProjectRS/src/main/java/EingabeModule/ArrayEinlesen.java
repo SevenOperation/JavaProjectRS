@@ -7,12 +7,10 @@ import java.io.ObjectInputStream;
 public class ArrayEinlesen {
 	public static String[][] readBenutzer(){
 		 ObjectInputStream is;
-		 String [][] benutzerarray = null;
+		 String [][] benutzerarray;
 	     try {
 	         is = new ObjectInputStream(new FileInputStream("benutzer.txt"));
-	         if(is.readObject() != null){
 	         benutzerarray = (String[][]) is.readObject();
-	         }
 	         is.close();
 	         return benutzerarray;
 
