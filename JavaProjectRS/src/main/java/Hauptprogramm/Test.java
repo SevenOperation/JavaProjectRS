@@ -29,7 +29,7 @@ import EingabeModule.Wohnung;
 
 @Path("/FerienWohnungVerwaltung")
 public class Test {
-	String cfp = "/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Homepage.html";
+	String cfp = "C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Homepage.html";
 	String[][] katalog = ArrayEinlesen.readKatalog();
 	String[][][] wohnungen = ArrayEinlesen.readWohnungen();
 	String[][] benutzer = ArrayEinlesen.readBenutzer();
@@ -45,7 +45,7 @@ public class Test {
 	@Produces({ MediaType.TEXT_HTML })
 	@Path("/logIn")
 	public FileInputStream logIn(@CookieParam("LoginData") String logindata) throws FileNotFoundException {
-		cfp = "/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Login.html";
+		cfp = "C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Login.html";
 			File file = new File(cfp);
 			return new FileInputStream(file);	
 	}
@@ -53,7 +53,7 @@ public class Test {
 	@Produces({ MediaType.TEXT_HTML })
 	@Path("/registrieren")
 	public FileInputStream registrieren() throws FileNotFoundException {
-		cfp = "/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Registrieren.html";
+		cfp = "C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Registrieren.html";
 			File file = new File(cfp);
 			return new FileInputStream(file);	
 	}
@@ -62,7 +62,11 @@ public class Test {
 	@Path("/registrieren")
 	public Response registrieren(@FormParam("vn") String vorname, @FormParam("nn") String nachname, @FormParam("ad") String adresse ) throws Exception {
 		//Uberpruefung der Daten fehlt
-		int l = benutzer.length;
+		int l = 0;
+		if(benutzer != null){
+		  l = benutzer.length;
+		}
+		
 		benutzer = Benutzer.benutzerRegistrieren(benutzer, vorname, nachname, adresse);
 		if(l < benutzer.length){
 		ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung"));
@@ -113,7 +117,7 @@ public class Test {
 	public FileInputStream wohnungAnlegenWeb(@CookieParam("LoginData") String logindata) throws FileNotFoundException {
 		System.out.println(logindata);
 		if (logedIn(logindata)) {
-			cfp = "/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/AdminInterface.html";
+			cfp = "C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/AdminInterface.html";
 			File file = new File(cfp);
 			return new FileInputStream(file);
 		}
@@ -287,7 +291,7 @@ public class Test {
 	public FileInputStream forbidden(){
 		try {
 			return new FileInputStream(
-					new File("/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/forbidden.html"));
+					new File("C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/forbidden.html"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
