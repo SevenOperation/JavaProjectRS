@@ -29,7 +29,8 @@ import EingabeModule.Wohnung;
 
 @Path("/FerienWohnungVerwaltung")
 public class Test {
-	String cfp = "C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Homepage.html";
+	//String cfp = "C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Homepage.html";
+	String cfp = "/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Homepage2.html";
 	String[][] katalog = ArrayEinlesen.readKatalog();
 	String[][][] wohnungen = ArrayEinlesen.readWohnungen();
 	String[][] benutzer = ArrayEinlesen.readBenutzer();
@@ -45,7 +46,8 @@ public class Test {
 	@Produces({ MediaType.TEXT_HTML })
 	@Path("/logIn")
 	public FileInputStream logIn(@CookieParam("LoginData") String logindata) throws FileNotFoundException {
-		cfp = "C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Login.html";
+		//cfp = "C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Login.html";
+		cfp = "/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Login.html";
 			File file = new File(cfp);
 			return new FileInputStream(file);	
 	}
@@ -53,7 +55,8 @@ public class Test {
 	@Produces({ MediaType.TEXT_HTML })
 	@Path("/registrieren")
 	public FileInputStream registrieren() throws FileNotFoundException {
-		cfp = "C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Registrieren.html";
+		//cfp = "C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Registrieren.html";
+		cfp = "/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Registrieren.html";
 			File file = new File(cfp);
 			return new FileInputStream(file);	
 	}
@@ -117,7 +120,8 @@ public class Test {
 	public FileInputStream wohnungAnlegenWeb(@CookieParam("LoginData") String logindata) throws FileNotFoundException {
 		System.out.println(logindata);
 		if (logedIn(logindata)) {
-			cfp = "C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/AdminInterface.html";
+			//cfp = "C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/AdminInterface.html";
+			cfp = "/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/AdminInterface.html";
 			File file = new File(cfp);
 			return new FileInputStream(file);
 		}
@@ -291,7 +295,8 @@ public class Test {
 	public FileInputStream forbidden(){
 		try {
 			return new FileInputStream(
-					new File("C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/forbidden.html"));
+					//new File("C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/forbidden.html"));
+			        new File("/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/forbidden.html"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
