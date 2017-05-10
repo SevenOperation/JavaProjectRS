@@ -22,6 +22,8 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
+import BearbeitungsModule.Ueberpruefer;
+import BearbeitungsModule.UeberpruefungWohnung;
 import EingabeModule.ArrayEinlesen;
 import EingabeModule.Benutzer;
 import EingabeModule.Buchen;
@@ -37,7 +39,7 @@ public class Test {
 
 	@GET
 	@Produces({ MediaType.TEXT_HTML })
-	public FileInputStream testA() throws FileNotFoundException {
+	public FileInputStream showHomepgae() throws FileNotFoundException {
 			File file = new File(cfp);
 			return new FileInputStream(file);	
 	}
@@ -69,8 +71,11 @@ public class Test {
 		if(benutzer != null){
 		  l = benutzer.length;
 		}
-		
+		if(Ueberpruefer.registrierDatenPruefen(benutzer, vorname, nachname)){
 		benutzer = Benutzer.benutzerRegistrieren(benutzer, vorname, nachname, adresse);
+		}else{
+        
+		}
 		if(l < benutzer.length){
 		ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung"));
 		NewCookie user = new NewCookie("LoginData", vorname + "-" + nachname + "-" + "true");
@@ -107,8 +112,12 @@ public class Test {
 	public void testA(@FormParam("preis") String preis, @FormParam("beschreibung") String beschreibung,
 			@FormParam("groese") String groese, @FormParam("imagepfad") String imagepfad,
 			@CookieParam("LoginData") String logindata) throws FileNotFoundException {
-		if (logedIn(logindata)) {
+		if (logedIn(logindata) && Ueberpruefer.hausAnlegenUeberpruefen(preis, groese)) {
+			if(Ueberpruefer.hausAnlegenUeberpruefen(preis, groese)){
 			Wohnung.wohnungAnlegen(katalog, preis, beschreibung, groese, imagepfad);
+			}else{
+				wohnungAnlegenWeb(logindata);
+			}
 		}else{
 		forbidden();
 		}
@@ -284,9 +293,9 @@ public class Test {
 		}
 		System.out.println(logindata);
 		String[] data = logindata.split("-");
-		if (data[0].equals("Seven") && data[1].equals("t") && data[2].equals("true")) {
-			return true;
-		}
+	    if(Ueberpruefer.loginUberpruefung(benutzer, data[0], data[1])){
+	    	return true;
+	    }
 		return false;
 	}
 

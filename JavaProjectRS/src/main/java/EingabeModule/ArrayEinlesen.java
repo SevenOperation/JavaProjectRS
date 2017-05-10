@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 public class ArrayEinlesen {
 	public static String[][] readBenutzer(){
 		 ObjectInputStream is;
-		 String [][] benutzerarray;
+		 String [][] benutzerarray = null;
 	     try {
 	         is = new ObjectInputStream(new FileInputStream("benutzer.txt"));
 	         benutzerarray = (String[][]) is.readObject();
@@ -16,9 +16,11 @@ public class ArrayEinlesen {
 
 	     }
 	     catch (Exception e) {
+	    
 	        return null;
 	     }
 	  }
+	
 	 public static String[][][] readWohnungen(){
 		 ObjectInputStream is;
 		 String [][][] wohungsarray;
@@ -38,7 +40,6 @@ public class ArrayEinlesen {
 		 ObjectInputStream is;
 		 String [][] katalogArray;
 	     try {
-	    	 System.out.println("Session begin");
 	         is = new ObjectInputStream(new FileInputStream("katalog.txt"));
 	         katalogArray = (String[][]) is.readObject();
 	         is.close();
@@ -46,7 +47,6 @@ public class ArrayEinlesen {
 
 	     }
 	     catch (Exception e) {
-	    	 System.out.println("wHY");
 	         return null;
 	     }
 	  } 

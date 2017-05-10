@@ -1,10 +1,16 @@
 package EingabeModule;
 
+import java.util.Calendar;
+
 import AusgabeModule.ArraySpeichern;
+import BearbeitungsModule.UeberpruefungWohnung;
 
 public class Buchen {
 	public static void suchenZeitraum(String zeitraum) {
-		// warte auf methode zur Ueberpruefung welche frei sind
+		if(UeberpruefungWohnung.datumsUeberpruefen(zeitraum)){
+			//UeberpruefungWohnung.kontrolle(wohn, zeitraum);
+			// warte auf methode zur Ueberpruefung welche frei sind
+		}
 	}
 
 	// Methode zum festlegen einer Buchung schreibt die daten in das wohnungen array
@@ -75,4 +81,65 @@ public class Buchen {
 		ArraySpeichern.save(wohnungen);
 		return wohnungen;
 	}
+	
+	public static String[][][] getBuchungenFromU(String[][][] wohnungen, String vorname, String nachname){
+		String [][][] gebuchteWohnungen = new String[wohnungen.length][0][4];
+		String [][][] buffer = new String[wohnungen.length][0][4];
+		if(wohnungen != null && wohnungen.length > 0){
+			for(int i = 0; i < wohnungen.length; i++){
+				buffer[i] = new String[wohnungen[i].length][4];
+				int buchungen = 0;
+				for (int x = 0; x < wohnungen[i].length; i++){
+					if(wohnungen[i][x][0].equals(vorname) && wohnungen[i][x][1].equals(nachname)){
+					 buffer[i][x] = wohnungen[i][x]; 
+					 buchungen += 1;
+					}
+				}
+				gebuchteWohnungen[i] = new String[buchungen][4];
+			}
+			
+			for(int i = 0; i < buffer.length; i++){
+				int buchungen =0;
+				for(int x = 0; x < buffer[i].length; x++){
+					if(buffer[i][x] != null){
+						gebuchteWohnungen[i][buchungen] = buffer[i][x];
+					}
+				}
+			}
+			return gebuchteWohnungen;
+		}
+		return null;
+	}
+	
+ public static double preisBerechnen(String zeitraum, String preis){
+	 String[] zeitraumA = zeitraum.split("-");
+		String[] datum1 = zeitraumA[0].split("\\.");
+		String[] datum2 = zeitraumA[1].split("\\.");
+		int gebuchtetage = 0;
+	 double preisD = Double.parseDouble(preis);
+	 if (datum2[2].equals(datum1[2]) && datum2[2].equals("" + Calendar.getInstance().get(Calendar.YEAR))) {
+			gebuchtetage += Integer.parseInt(datum2[0]) - Integer.parseInt(datum1[0]);
+			for (int y = 0; y < (Integer.parseInt(datum2[1]) - Integer.parseInt(datum1[1])); y++) {
+				gebuchtetage += 365 /12;
+			}
+	 }
+	 if(gebuchtetage >= 365){
+		 double rabatt = ((preisD * gebuchtetage) / 100) * 80;
+		 return (preisD * gebuchtetage) - rabatt;
+	 }else if(gebuchtetage >= 180){
+		 double rabatt = ((preisD * gebuchtetage) / 100) * 40;
+		 return (preisD * gebuchtetage) - rabatt;
+	 }else if(gebuchtetage >= 42){
+		 double rabatt = ((preisD * gebuchtetage) / 100) * 22;
+		 return (preisD * gebuchtetage) - rabatt;
+	 }else if(gebuchtetage >= 21){
+		 double rabatt = ((preisD * gebuchtetage) / 100) * 10;
+		 return (preisD * gebuchtetage) - rabatt;
+	 }else if(gebuchtetage >= 7){
+		 double rabatt = ((preisD * gebuchtetage) / 100) * 3;
+		 return (preisD * gebuchtetage) - rabatt;
+	 }else{
+		 return preisD * gebuchtetage;
+	 }
+ }
 }
