@@ -114,17 +114,25 @@ public class Test {
 
 	@POST
 	@Path("/WohnungAnlegen")
-	public void testA(@FormParam("preis") String preis, @FormParam("beschreibung") String beschreibung,
+	public Response testA(@FormParam("preis") String preis, @FormParam("beschreibung") String beschreibung,
 			@FormParam("groese") String groese, @FormParam("imagepfad") String imagepfad,
-			@CookieParam("LoginData") String logindata) throws FileNotFoundException {
-		if (logedIn(logindata) && Ueberpruefer.hausAnlegenUeberpruefen(preis, groese)) {
+			@CookieParam("LoginData") String logindata) throws Exception {
+		if (logedIn(logindata)) {
 			if (Ueberpruefer.hausAnlegenUeberpruefen(preis, groese)) {
 				Wohnung.wohnungAnlegen(katalog, preis, beschreibung, groese, imagepfad);
+				ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung"));
+				Response r = rb.build();
+				return r;
 			} else {
 				wohnungAnlegenWeb(logindata);
+				ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung/WohnungAnlegen"));
+				Response r = rb.build();
+				return r;
 			}
 		} else {
-			forbidden();
+			ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung/forbidden"));
+			Response r = rb.build();
+			return r;
 		}
 	}
 
@@ -148,54 +156,57 @@ public class Test {
 	@POST
 	@Path("/buchen")
 	@Produces({ MediaType.TEXT_HTML })
-	public String suchErgebnisse(@CookieParam("LoginData") String login, @FormParam("von") String von, @FormParam("bis") String bis) {
+	public String suchErgebnisse(@CookieParam("LoginData") String login, @FormParam("von") String von,
+			@FormParam("bis") String bis) {
 		String html;
 		String[][] gesuchteHaueser = katalog;// Methode Fehlt
 		html = "<!DOCTYPE html>" + "\n<html>" + "\n<head>" + "\n<meta charset='UTF-8'>"
-				+ "\n<title>Insert title here</title>\n<link rel='stylesheet' href='/JavaProjectRS/Style.css'>" + "\n</head>" + "\n<body>"
-				+ "\n<div>"
+				+ "\n<title>Insert title here</title>\n<link rel='stylesheet' href='/JavaProjectRS/Style.css'>"
+				+ "\n</head>" + "\n<body>" + "\n<div>"
 				+ "\n<div style='background-color: #24292e; padding-top: 12px; padding-bottom: 12px; line-height: 1.5 ;'>"
 				+ "\n<div class='head' style='width: 960px; margin-left: auto; margin-right: auto; line-height: 1.5; font-size: 14px'>"
 				+ "\n<ul style='margin-top: 0; list-style: none; float: left; padding-left: 0; margin-bottom: 0'>"
 				+ "\n<li><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Startseite</a></li>"
 				+ "\n<li><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/buchen'>Katalog</a></li>"
 				+ "\n</ul>" + "\n<ul style='margin: 0; list-style: none; float: right;'>";
-				if(login != null){
-					html += "\n<li style='float: left'><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/user'>"+ login.split("-")[0] +"</a></li>";
-				}else{
-					html += "\n<li style='float: left'><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/logIn'>Einloggen</a></li>"
-				    + "\n<li style='float: left'><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/registrieren'>Registrieren</a></li>";
-				}
-				html += "\n</ul>" + "\n</div>" + "\n</div>" + "\n</div>"
+		if (login != null) {
+			html += "\n<li style='float: left'><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/user'>"
+					+ login.split("-")[0] + "</a></li>";
+		} else {
+			html += "\n<li style='float: left'><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/logIn'>Einloggen</a></li>"
+					+ "\n<li style='float: left'><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/registrieren'>Registrieren</a></li>";
+		}
+		html += "\n</ul>" + "\n</div>" + "\n</div>" + "\n</div>"
 				+ "\n<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>"
 				+ "\n<script type='text/javascript'> " + "\n function mybooking(id){"
 				+ "\n var req = $('<form action=/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnung method=POST><input type=hidden name=wohnung value='+id+'></input></form>');"
 				+ "\nvar t = $(req);" + "\n$('body').append(req);" + "\n$(req).submit();" + "\n}" + "\n</script>"
 				+ "\n<table border='1' align='center'>";
-		if(gesuchteHaueser != null){
-		 for (int i = 0; i < gesuchteHaueser.length; i++) {
-			html += "\n<tr>";
-			for (int x = 0; x < 4; x++) {
-				if (x == 3) {
-					html += "\n<td><button id='" + i + "' onclick='mybooking(this.id)'><img src="
-							+ gesuchteHaueser[i][x] + " width='190' height='108'></button></td>";
-				} 
-					
-				
+		if (gesuchteHaueser != null) {
+			html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td></tr>";
+			for (int i = 0; i < gesuchteHaueser.length; i++) {
+				html += "\n<tr>";
+				html += "\n<tr>" + "\n<td>" + "\n<p>" + (i + 1) + "</p>" + "\n</td>";
+				for (int x = 0; x < 4; x++) {
+					if (x == 3) {
+						html += "\n<td><button id='" + i + "' onclick='mybooking(this.id)'><img src="
+								+ gesuchteHaueser[i][x] + " width='190' height='108'></button></td>";
+					} else {
+						html += "\n<td>" + gesuchteHaueser[i][x] + "</td>";
+					}
+				}
+				html += "\n</tr>";
 			}
-			html += "\n</tr>";
+		} else {
+			html += "<tr><td>Keine Objekte Gefunden</td></tr>";
 		}
-		}else{
-		html+= "<tr><td>Keine Objekte Gefunden</td></tr>";
-		}
-		html += "\n</table>" + "\n <form method='POST' action=''>"
+		html += "\n</table>"
+				+ "\n <form method='POST' action='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/buchen'>"
 				+ "\n<p>Von:<input id='von' name='von' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
 				+ "\n<p>Bis:<input id='bis' name='bis' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
-				+ "\n<button>Suchen</button" + "\n</form>"
+				+ "\n<button>Suchen</button></form>"
 				+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>" + "\n</body>"
 				+ "\n</html>";
-		System.out.println(html);
-
 		return html;
 	}
 
@@ -203,53 +214,54 @@ public class Test {
 	@Path("/buchen")
 	@Produces({ MediaType.TEXT_HTML })
 	public String wohnungenAnzeige(@CookieParam("LoginData") String login) {
-		
+
 		String html;
 		html = "<!DOCTYPE html>" + "\n<html>" + "\n<head>" + "\n<meta charset='UTF-8'>"
-				+ "\n<title>Insert title here</title>\n<link rel='stylesheet' href='/JavaProjectRS/Style.css'> " + "\n</head>" + "\n<body>"
-				+ "\n<div>"
+				+ "\n<title>Insert title here</title>\n<link rel='stylesheet' href='/JavaProjectRS/Style.css'> "
+				+ "\n</head>" + "\n<body>" + "\n<div>"
 				+ "\n<div style='background-color: #24292e; padding-top: 12px; padding-bottom: 12px; line-height: 1.5 ;'>"
 				+ "\n<div class='head' style='width: 960px; margin-left: auto; margin-right: auto; line-height: 1.5; font-size: 14px'>"
 				+ "\n<ul style='margin-top: 0; list-style: none; float: left; padding-left: 0; margin-bottom: 0'>"
 				+ "\n<li><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Startseite</a></li>"
 				+ "\n<li><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/buchen'>Katalog</a></li>"
 				+ "\n</ul>" + "\n<ul style='margin: 0; list-style: none; float: right;'>";
-				if(login != null){
-					html += "\n<li style='float: left'><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/user'>"+ login.split("-")[0] +"</a></li>";
-				}else{
-					html += "\n<li style='float: left'><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/logIn'>Einloggen</a></li>"
-				    + "\n<li style='float: left'><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/registrieren'>Registrieren</a></li>";
-				}
-				html += "\n</ul>" + "\n</div>" + "\n</div>" + "\n</div>"
+		if (login != null) {
+			html += "\n<li style='float: left'><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/user'>"
+					+ login.split("-")[0] + "</a></li>";
+		} else {
+			html += "\n<li style='float: left'><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/logIn'>Einloggen</a></li>"
+					+ "\n<li style='float: left'><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/registrieren'>Registrieren</a></li>";
+		}
+		html += "\n</ul>" + "\n</div>" + "\n</div>" + "\n</div>"
 				+ "\n<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>"
 				+ "\n<script type='text/javascript'> " + "\n function mybooking(id){"
 				+ "\n var req = $('<form action=/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnung method=POST><input type=hidden name=wohnung value='+id+'></input></form>');"
 				+ "\nvar t = $(req);" + "\n$('body').append(req);" + "\n$(req).submit();" + "\n}" + "\n</script>"
 				+ "\n<table border='1' align='center'>";
-		if(katalog != null){
-		for (int i = 0; i < katalog.length; i++) {
-			html += "\n<tr>" + "\n<td>" + "\n<p>Hausnummer:" + (i + 1) + "</p>" + "\n</td>";
-			for (int x = 0; x < 4; x++) {
-				if (x == 3) {
-					html += "\n<td><button id='" + i + "' onclick='mybooking(this.id)'><img src=" + katalog[i][x]
-							+ " width='190' height='108'></button></td>";
-				} else {
-					html += "\n<td>" + katalog[i][x] + "</td>";
+		if (katalog != null) {
+			html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td></tr>";
+			for (int i = 0; i < katalog.length; i++) {
+				html += "\n<tr>" + "\n<td>" + "\n<p>" + (i + 1) + "</p>" + "\n</td>";
+				for (int x = 0; x < 4; x++) {
+					if (x == 3) {
+						html += "\n<td><button id='" + i + "' onclick='mybooking(this.id)'><img src=" + katalog[i][x]
+								+ " width='190' height='108'></button></td>";
+					} else {
+						html += "\n<td>" + katalog[i][x] + "</td>";
+					}
 				}
+				html += "\n</tr>";
 			}
-			html += "\n</tr>";
+		} else {
+			html += "<tr><td>Keine Objekte Vorhanden</td></tr>";
 		}
-		}else{
-			html+= "<tr><td>Keine Objekte Vorhanden</td></tr>";
-		}
-		html += "\n</table>" + "\n <form method='POST' action=''>"
+		html += "\n</table>"
+				+ "\n <form method='POST' action='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/buchen'>"
 				+ "\n<p>Von:<input id='von' name='von' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
 				+ "\n<p>Bis:<input id='bis' name='bis' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
-				+ "\n<button>Suchen</button" + "\n</form>"
+				+ "\n<button>Suchen</button>\n</form>"
 				+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>" + "\n</body>"
 				+ "\n</html>";
-		System.out.println(html);
-
 		return html;
 
 	}
@@ -278,7 +290,8 @@ public class Test {
 				+ "\n req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');"
 				+ "\n req.send('von='+von+'&bis='+bis+'&wohnung='+" + id + ");" + "\n}" + "\n</script>"
 				+ "\n<table border='1' align='center'>";
-		html += "\n<tr>";
+		html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td></tr>";
+		html += "\n<tr><td>"+(wohnung +1) + "</td>";
 		for (int i = 0; i < 4; i++) {
 			if (i == 3) {
 				html += "\n<td><img src=" + katalog[wohnung][i] + " width='190' height='108'></td>";
@@ -291,7 +304,6 @@ public class Test {
 		if (wohnungen != null) {
 			if (wohnung < wohnungen.length) {
 				if (wohnungen[wohnung] != null) {
-
 					for (int i = 0; i < wohnungen[wohnung].length; i++) {
 						html += "\n<tr>";
 						html += "\n<td>" + wohnungen[wohnung][i][2] + "</td>";
@@ -306,7 +318,6 @@ public class Test {
 				+ "\n<button onclick='buchen()'>Buchen</button>"
 				+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>" + "\n</body>"
 				+ "\n</html>";
-		System.out.println(html);
 		return html;
 	}
 
