@@ -3,7 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <title>FerienWohnungen</title>
-<link rel="stylesheet" href="/JavaProjectRS/Style.css">  
+<link rel="stylesheet" href="/JavaProjectRS/Style.css"> 
+<script type="text/javascript">function dropdown(auswahl){
+	if (auswahl == 0) {
+		document.getElementById("test").classList.toggle("show");
+	}else if (auswahl == 1){
+		
+	}
+}
+	window.onclick = function(event) {
+		  if (!event.target.matches('.einloggenCss') && !event.target.matches('.input')) {
+		    var dropdowns = document.getElementsByClassName("drop");
+		    var i;
+		    for (i = 0; i < dropdowns.length; i++) {
+		      var openDropdown = dropdowns[i];
+		      if (openDropdown.classList.contains('show')) {
+		        openDropdown.classList.remove('show');
+		      }
+		    }
+		  }
+		}
+	</script> 
+	
 </head>
 <body style="background-image: url('/JavaProjectRS/AlphaUpdate.jpg'); ">
 <div class="banner">
@@ -14,11 +35,21 @@
 <li><a href="/JavaProjectRS/restful-services/FerienWohnungVerwaltung/buchen">Katalog</a></li>
 </ul>
 <ul style="margin: 0; list-style: none; float: right;">
-<li style="float: left"><a href="/JavaProjectRS/restful-services/FerienWohnungVerwaltung/logIn">Einloggen</a></li>
-<li style="float: left"><a href="/JavaProjectRS/restful-services/FerienWohnungVerwaltung/registrieren">Registrieren</a></li>
+<li style="float: left"><a  class="einloggenCss" onclick="dropdown(0)" >Einloggen</a></li>
+<li style="float: left"><a onclick="dropdown(1)" href="/JavaProjectRS/restful-services/FerienWohnungVerwaltung/registrieren">Registrieren</a></li>
 </ul>
 </div>
 </div>
 </div>
+<div style="width: 960px; margin-left: auto; margin-right: auto;">
+<div id="test" class="drop" align="center">
+<form action="/JavaProjectRS/restful-services/FerienWohnungVerwaltung/einloggen" method="post">
+<p><input class="input" id="vn" name="vn" type="text" placeholder="Vorname"></input></p>
+<p><input class="input" id="nn" name="nn" type="text" placeholder="Nachname"></input></p>
+<p><button type="submit">Einloggen</button></p>
+</form>
+</div>
+</div>
+
 </body>
 </html>

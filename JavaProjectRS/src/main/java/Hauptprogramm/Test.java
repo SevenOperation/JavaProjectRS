@@ -327,10 +327,11 @@ public class Test {
 	public String buchen(@FormParam("von") String von, @FormParam("bis") String bis,
 			@FormParam("wohnung") String wohnung, @CookieParam("LoginData") String logindata) {
 		if (logedIn(logindata)) {
-			System.out.println("Hi" + wohnung + bis + von);
+			String[] daten = logindata.split("-");
 			String zeitraum = von + "-" + bis;
-			Buchen.buchen(wohnungen, Integer.parseInt(wohnung), zeitraum, "Karl", "Peter");
-			return "Hi";
+			//Uberpruefung ob die Wohnung beriets belegt ist fehlt
+			Buchen.buchen(wohnungen, Integer.parseInt(wohnung), zeitraum, daten[0], daten[1]);
+			return "Gebucht";
 		} else {
 			return forbidden().toString();
 		}
@@ -354,11 +355,9 @@ public class Test {
 	public FileInputStream forbidden() {
 		try {
 			return new FileInputStream(
-					// new
-					// File("C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/forbidden.html"));
+				// new File("C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/forbidden.html"));
 					new File("/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/forbidden.html"));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
