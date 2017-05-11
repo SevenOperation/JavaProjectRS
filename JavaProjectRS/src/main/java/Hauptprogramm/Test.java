@@ -100,7 +100,8 @@ public class Test {
 	public Response einloggen(@FormParam("vn") String vorname, @FormParam("nn") String nachname,
 			@CookieParam("LoginData") String logindata) throws Exception {
 		// uberpurefung des Namens kommt noch
-		if (logedIn(logindata)) { // Kontrolliert die cookie daten
+		
+		if (logedIn(logindata) || logedIn(vorname +"-"+nachname)) { // Kontrolliert die cookie daten
 			ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung"));
 			NewCookie user = new NewCookie("LoginData", vorname + "-" + nachname + "-" + "true");
 			Response r = rb.cookie(user).build();
