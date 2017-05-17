@@ -2,16 +2,46 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>AdminInterface</title>
+<title>FerienWohnungen</title>
+<link rel="stylesheet" href="/JavaProjectRS/Style.css"> 
+<script type="text/javascript">function dropdown(){
+		document.getElementById("test").classList.toggle("show");
+}
+	window.onclick = function(event) {
+		  if (!event.target.matches('.einloggenCss') && !event.target.matches('.input')) {
+		    var dropdowns = document.getElementsByClassName("drop2");
+		    var i;
+		    for (i = 0; i < dropdowns.length; i++) {
+		      var openDropdown = dropdowns[i];
+		      if (openDropdown.classList.contains('show')) {
+		        openDropdown.classList.remove('show');
+		      }
+		    }
+		  }
+		}
+	</script> 
+	
 </head>
-<body>
-<form action=""  method="post">
-<p>Preis:<input id="preis" required="required" name="preis" type="text" placeholder="Preis"></input><p>
-<p>Beschreibung:<textarea  required="required" name="beschreibung" cols=""></textarea></p>
-<p>Größe:<input id="groese" required="required" name="groese" type="text" placeholder="Größe"></input></p>
-<p>Imagepfad:<input id="imagepfad" required="required" name="imagepfad" type="text" placeholder="Imagepfad"></input></p>
-<p><button type="submit">Wohnung Anlegen</button></p>
-</form>
-<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/buchen'>Zurück</a>
+<body style="background-image: url('/JavaProjectRS/AlphaUpdate.jpg'); background-size: cover; ">
+<div class="banner">
+<div style="background-color: #24292e; padding-top: 12px; padding-bottom: 12px; line-height: 1.5 ;">
+<div class="head" style=" width: 960px; margin-left: auto; margin-right: auto; line-height: 1.5; font-size: 14px">
+<ul style="margin-top: 0; list-style: none; float: left; padding-left: 0; margin-bottom: 0">
+<li><a href="/JavaProjectRS/restful-services/FerienWohnungVerwaltung/">Startseite</a></li>
+<li><a href="/JavaProjectRS/restful-services/FerienWohnungVerwaltung/AdminInterface">AdminInterface</a></li>
+</ul>
+<ul style="margin: 0; list-style: none; float: right;">
+<li style="float: left"><a class="einloggenCss" onclick="dropdown()">Admin</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div style="width: 1080px; margin-left: auto; margin-right: auto;">
+<div id="test" class="drop2" align="center">
+<a style="color: black;" href="/JavaProjectRS/restful-services/FerienWohnungVerwaltung/WohnungAnlegen">Wohnunganlegen</a>
+<a style="color: black;" href="/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnungentfernen">Wohnungentfernen</a>
+</div>
+</div>
+
 </body>
 </html>
