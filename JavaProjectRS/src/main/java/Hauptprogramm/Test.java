@@ -224,7 +224,7 @@ public class Test {
 					+ logindata.split("-")[0] + "</a></li>" + "\n</ul>" + "\n</div>" + "\n</div>" + "\n</div>"
 					+ HtmlExtension.dropdownUserMenueHTML();
 
-			html += "\n<table border='1' align='center' id='table' style='position: absolute'>";
+			html += "\n<table border='1' align='center' id='table' style='position: relative'>";
 			if (katalog != null) {
 				html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td><td>Aktion</td></tr>";
 				for (int i = 0; i < katalog.length; i++) {
@@ -276,7 +276,7 @@ public class Test {
 			html += HtmlExtension.normalHtmlBannerNotLogedIn();
 			html += HtmlExtension.dropdownLoginHTML();
 		}
-		html += "\n<table border='1' align='center' id='table' style='position: absolute'>";
+		html += "\n<table border='1' align='center' id='table' style='position: relative'>";
 		if (gesuchteHaueser != null) {
 			html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td></tr>";
 			for (int i = 0; i < gesuchteHaueser.length; i++) {
@@ -326,7 +326,7 @@ public class Test {
 				+ "\n<script type='text/javascript'> " + "\n function mybooking(id){"
 				+ "\n var req = $('<form action=/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnung method=POST><input type=hidden name=wohnung value='+id+'></input></form>');"
 				+ "\nvar t = $(req);" + "\n$('body').append(req);" + "\n$(req).submit();" + "\n}" + "\n</script>"
-				+ "\n<table border='1' align='center' id='table' style='position: absolute'>";
+				+ "\n<table border='1' align='center' id='table' style='position: relative'>";
 		if (katalog != null) {
 			html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td></tr>";
 			for (int i = 0; i < katalog.length; i++) {
@@ -378,7 +378,7 @@ public class Test {
 				+ "\n req.open('POST','/JavaProjectRS/restful-services/FerienWohnungVerwaltung/booking.yeah');"
 				+ "\n req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');"
 				+ "\n req.send('von='+von+'&bis='+bis+'&wohnung='+" + id + ");" + "\n}" + "\n</script>"
-				+ "\n<table border='1' align='center' style='position: absolute'>";
+				+ "\n<table border='1' align='center' style='position: relative'>";
 		html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td></tr>";
 		html += "\n<tr><td>" + (wohnung + 1) + "</td>";
 		for (int i = 0; i < 4; i++) {

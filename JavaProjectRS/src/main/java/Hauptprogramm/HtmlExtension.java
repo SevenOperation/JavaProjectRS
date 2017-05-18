@@ -27,7 +27,7 @@ public class HtmlExtension {
    
    public static String dropdownLoginHTML(){
 	   String html = "<div style='width: 960px; margin-left: auto; margin-right: auto;'>"
-	   		+ "<div id='test' style='width: 340px' class='drop2' align='center'>"
+	   		+ "<div id='test' style='width: 340px;' class='drop2' align='center'>"
 	   		+ "<form action='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/einloggen' method='post'>"
 	   		+ "<p>"
 	   		+ "<input class='input' id='vn' name='vn' type='text' placeholder='Vorname'></input>"
@@ -45,7 +45,7 @@ public class HtmlExtension {
    }
    public static String dropdownUserMenueHTML(){
 	   String html = "\n<div style='width: 1080px; margin-left: auto; margin-right: auto; padding: 0;'>"
-				+ "\n<div id='test' class='drop2' align='center'>"
+				+ "\n<div style='position: absolute; z-index:2' id='test' class='drop2' align='center'>"
 				+ "\n <a style='color:black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/buchungStornieren'>Buchung Stornieren</a>"
 				+ "\n <a style='color:black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/gebuchteWohnungen'>Buchungen</a>"
 				+ "\n</div>" ;
