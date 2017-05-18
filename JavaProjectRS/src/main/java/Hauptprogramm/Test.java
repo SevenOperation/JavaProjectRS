@@ -43,11 +43,22 @@ public class Test {
 	String[][][] wohnungen = ArrayEinlesen.readWohnungen();
 	String[][] benutzer = ArrayEinlesen.readBenutzer();
 
+	@POST
 	@GET
 	@Produces({ MediaType.TEXT_HTML })
-	public FileInputStream showHomepgae() throws FileNotFoundException {
-		File file = new File(cfp);
-		return new FileInputStream(file);
+	public String showHomepgae(@CookieParam("LoginData") String logindata) throws FileNotFoundException {
+		String html = HtmlExtension.normalHtmlHead("Homepage");
+		html += HtmlExtension.dropdownScript();
+		html += "</head><body style='background-image: url(/JavaProjectRS/AlphaUpdate.jpg);  background-size: cover;'>";
+		if(logindata != null && logedIn(logindata)){
+			html += HtmlExtension.normalHtmlBannerLogedIn(logindata);
+			html+= HtmlExtension.dropdownUserMenueHTML();
+		}else{
+	        html += HtmlExtension.normalHtmlBannerNotLogedIn();
+			html += HtmlExtension.dropdownLoginHTML();
+		}
+		html += HtmlExtension.htmlend();
+		return html;
 	}
 
 	@GET
@@ -213,7 +224,7 @@ public class Test {
 					+ logindata.split("-")[0] + "</a></li>" + "\n</ul>" + "\n</div>" + "\n</div>" + "\n</div>"
 					+ HtmlExtension.dropdownUserMenueHTML();
 
-			html += "\n<table border='1' align='center' id='table'>";
+			html += "\n<table border='1' align='center' id='table' style='position: absolute'>";
 			if (katalog != null) {
 				html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td><td>Aktion</td></tr>";
 				for (int i = 0; i < katalog.length; i++) {
@@ -237,8 +248,8 @@ public class Test {
 					+ "\n<p>Von:<input id='von' name='von' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
 					+ "\n<p>Bis:<input id='bis' name='bis' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
 					+ "\n<button>Suchen</button>\n</form>"
-					+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>" + "\n</body>"
-					+ "\n</html>";
+					+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>" 
+					+ HtmlExtension.htmlend();
 			return html;
 		} else {
 			return forbiddenString();
@@ -265,7 +276,7 @@ public class Test {
 			html += HtmlExtension.normalHtmlBannerNotLogedIn();
 			html += HtmlExtension.dropdownLoginHTML();
 		}
-		html += "\n<table border='1' align='center' id='table'>";
+		html += "\n<table border='1' align='center' id='table' style='position: absolute'>";
 		if (gesuchteHaueser != null) {
 			html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td></tr>";
 			for (int i = 0; i < gesuchteHaueser.length; i++) {
@@ -289,8 +300,8 @@ public class Test {
 				+ "\n<p>Von:<input id='von' name='von' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
 				+ "\n<p>Bis:<input id='bis' name='bis' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
 				+ "\n<button>Suchen</button></form>"
-				+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>" + "\n</body>"
-				+ "\n</html>";
+				+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>" 
+				+ HtmlExtension.htmlend();
 		return html;
 	}
 
@@ -315,7 +326,7 @@ public class Test {
 				+ "\n<script type='text/javascript'> " + "\n function mybooking(id){"
 				+ "\n var req = $('<form action=/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnung method=POST><input type=hidden name=wohnung value='+id+'></input></form>');"
 				+ "\nvar t = $(req);" + "\n$('body').append(req);" + "\n$(req).submit();" + "\n}" + "\n</script>"
-				+ "\n<table border='1' align='center' id='table'>";
+				+ "\n<table border='1' align='center' id='table' style='position: absolute'>";
 		if (katalog != null) {
 			html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td></tr>";
 			for (int i = 0; i < katalog.length; i++) {
@@ -338,8 +349,8 @@ public class Test {
 				+ "\n<p>Von:<input id='von' name='von' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
 				+ "\n<p>Bis:<input id='bis' name='bis' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
 				+ "\n<button>Suchen</button>\n</form>"
-				+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>" + "\n</body>"
-				+ "\n</html>";
+				+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>"
+				+ HtmlExtension.htmlend();
 		return html;
 
 	}
@@ -367,7 +378,7 @@ public class Test {
 				+ "\n req.open('POST','/JavaProjectRS/restful-services/FerienWohnungVerwaltung/booking.yeah');"
 				+ "\n req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');"
 				+ "\n req.send('von='+von+'&bis='+bis+'&wohnung='+" + id + ");" + "\n}" + "\n</script>"
-				+ "\n<table border='1' align='center'>";
+				+ "\n<table border='1' align='center' style='position: absolute'>";
 		html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td></tr>";
 		html += "\n<tr><td>" + (wohnung + 1) + "</td>";
 		for (int i = 0; i < 4; i++) {
@@ -394,8 +405,8 @@ public class Test {
 		html += "\n</table>" + "\nVon:<input id='von' placeholder=' Von bsp. 20.06.2010'type='text' required></input>"
 				+ "\nBis:<input id='bis' placeholder=' Bis bsp. 28.06.2010'type='text' required></input>"
 				+ "\n<button onclick='buchen()'>Buchen</button>"
-				+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>" + "\n</body>"
-				+ "\n</html>";
+				+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>"
+				+ HtmlExtension.htmlend();
 		return html;
 	}
 
@@ -444,17 +455,7 @@ public class Test {
 	}
 
 	public String forbiddenString() {
-		try {
-			String s = new Scanner(
-					new File("/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/forbidden.html"))
-							.useDelimiter("\\Z").next();
-			return s;
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
-
+		return HtmlExtension.gethtmlForbidden();
 	}
 
 }

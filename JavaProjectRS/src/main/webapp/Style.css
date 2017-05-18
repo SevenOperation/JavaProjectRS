@@ -22,6 +22,7 @@ a{
 	text-decoration: none;
 	color: white;
 	padding: 5px 8px;
+	cursor: pointer;
 }
 li{
 	float: left;
