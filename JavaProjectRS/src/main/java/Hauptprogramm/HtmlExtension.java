@@ -97,5 +97,16 @@ public class HtmlExtension {
    public static String htmlend(){
 	   return "</div></body></html>";
    }
+   
+   public static String htmlWohnungAnlegen(){
+	   String html = "<form action=''  method='post'>"
++ "<p>Preis:<input id=preis' required='required' name='preis' type='text' placeholder='Preis'></input><p>"
++ "<p>Beschreibung:<textarea  required='required' name='beschreibung' cols=''></textarea></p>"
++ "<p>Größe:<input id='groese' required='required' name='groese' type='text' placeholder='Größe'></input></p>"
++ "<p>Imagepfad:<input id='imagepfad' required='required' name='imagepfad' type='text' placeholder='Imagepfad'></input></p>"
++ "<p><button type='submit'>Wohnung Anlegen</button></p>"
++ "</form>";
+	   return html;
+   }
 	
 }

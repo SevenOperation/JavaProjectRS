@@ -189,17 +189,20 @@ public class Test {
 	@GET
 	@Path("/WohnungAnlegen")
 	@Produces({ MediaType.TEXT_HTML })
-	public FileInputStream wohnungAnlegenGET(@CookieParam("LoginData") String logindata) throws FileNotFoundException {
+	public String wohnungAnlegenGET(@CookieParam("LoginData") String logindata) throws FileNotFoundException {
 		System.out.println(logindata);
 
 		if (logedIn(logindata) && logindata.split("-")[0].equals("Seven") && logindata.split("-")[1].equals("t")) {
-			// cfp =
-			// "C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/AdminInterface.html";
-			cfp = "/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/AdminInterface.html";
-			File file = new File(cfp);
-			return new FileInputStream(file);
+			String html = HtmlExtension.normalHtmlHead("Wohnunganlgen");
+			html += HtmlExtension.dropdownScript();
+			html += "\n </head> \n<body>" + "\n<div>"
+			+ HtmlExtension.normalHtmlBannerLogedIn(logindata);
+			html += HtmlExtension.dropdownUserMenueHTML()
+			+ HtmlExtension.htmlWohnungAnlegen()
+			+ HtmlExtension.htmlend();
+			return html;
 		}
-		return forbidden();
+		return forbiddenString();
 
 	}
 
