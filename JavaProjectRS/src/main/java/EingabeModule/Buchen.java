@@ -3,16 +3,8 @@ package EingabeModule;
 import java.util.Calendar;
 
 import AusgabeModule.ArraySpeichern;
-import BearbeitungsModule.UeberpruefungWohnung;
 
 public class Buchen {
-	public static void suchenZeitraum(String zeitraum) {
-		if(UeberpruefungWohnung.datumsUeberpruefen(zeitraum)){
-			//UeberpruefungWohnung.kontrolle(wohn, zeitraum);
-			// warte auf methode zur Ueberpruefung welche frei sind
-		}
-	}
-
 	// Methode zum festlegen einer Buchung schreibt die daten in das wohnungen array
 	public static String[][][] buchen(String[][][] wohnungen, int wohnung, String zeitraum, String vorname,
 			String nachname) {
