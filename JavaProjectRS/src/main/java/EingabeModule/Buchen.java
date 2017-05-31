@@ -1,11 +1,19 @@
 package EingabeModule;
 
+/**
+ * Date: 31.5.17
+ * @author Maurice Fernitz
+ * @version 0.9
+ * Name: JavaProjectRS
+ * Klasse FS62
+ */
+
 import java.util.Calendar;
 
 import AusgabeModule.ArraySpeichern;
-
+//Does everything which has to do with booking
 public class Buchen {
-	// Methode zum festlegen einer Buchung schreibt die daten in das wohnungen array
+	// method which adds a entry in to the array
 	public static String[][][] buchen(String[][][] wohnungen, int wohnung, String zeitraum, String vorname,
 			String nachname) {
 		String[][] katalog = ArrayEinlesen.readKatalog();// Zum ueberpruefen ob Wohung ueberhaupt existiert
@@ -45,7 +53,7 @@ public class Buchen {
 		}
 		return null;
 	}
-
+	// method which removes a entry from the array
 	public static String[][][] buchungStornieren(String[][][] wohnungen, int wohnung, String zeitraum, String vorname,String nachname) {
 		if (wohnungen == null || wohnungen[wohnung] == null || wohnungen[wohnung].length == 0) { // Gibt es die Wohnung existiert ueberhaupt eine Reservierung 
 			return wohnungen;
@@ -74,6 +82,7 @@ public class Buchen {
 		return wohnungen;
 	}
 	
+	// returns a list with every entry from a specific user
 	public static String[][][] getBuchungenFromU(String[][][] wohnungen, String vorname, String nachname){
 		String [][][] gebuchteWohnungen = new String[wohnungen.length][0][4];
 		String [][][] buffer = new String[wohnungen.length][0][4];
@@ -103,6 +112,7 @@ public class Buchen {
 		return null;
 	}
 	
+	// returns and calculates the prize the user has to pay
  public static double preisBerechnen(String zeitraum, String preis){
 	 String[] zeitraumA = zeitraum.split("-");
 		String[] datum1 = zeitraumA[0].split("\\.");

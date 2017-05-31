@@ -1,9 +1,17 @@
 package EingabeModule;
 
-import AusgabeModule.ArraySpeichern;
+/**
+ * Date: 31.5.17
+ * @author Maurice Fernitz
+ * @version 0.9
+ * Name: JavaProjectRS
+ * Klasse FS62
+ */
 
+import AusgabeModule.ArraySpeichern;
+//Does everything which has to do with users
 public class Benutzer {
-    //Fügt durch vegrößerung des Arrays einen benutzer in das Array hinzu, gibt ein array zurück da array vielleicht noch nicht initzialisiert ist
+    //Adds an user to the array
 	public static String[][] benutzerRegistrieren(String[][] benutzer, String vorname, String nachname, String adresse){
 		if(benutzer == null){
 			benutzer = new String[1][3];

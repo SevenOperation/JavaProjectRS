@@ -1,8 +1,18 @@
 package EingabeModule;
 
+/**
+ * Date: 31.5.17
+ * @author Maurice Fernitz
+ * @version 0.9
+ * Name: JavaProjectRS
+ * Klasse FS62
+ */
+
 import AusgabeModule.ArraySpeichern;
 
+//Does everything which has to do with Houses
 public class Wohnung {
+	//Method which adds a House to the array
  public static String[][] wohnungAnlegen(String[][] katalog, String Preis,String beschreibung,String groese, String imagepfad){
 	 if(katalog == null){
 		 katalog = new String[1][4];
@@ -22,6 +32,8 @@ public class Wohnung {
 	 ArraySpeichern.saveKatalog(katalog);
 	 return katalog;
  }
+ 
+//Method which deletes a House from the array
  public static String[][] wohnungLoeschen(String[][] katalog, int position){
 	 if(katalog != null && katalog[position] != null){
 		katalog[position] = null;

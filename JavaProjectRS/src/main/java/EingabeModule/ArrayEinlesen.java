@@ -1,10 +1,18 @@
 package EingabeModule;
 
+/**
+ * Date: 31.5.17
+ * @author Maurice Fernitz
+ * @version 0.9
+ * Name: JavaProjectRS
+ * Klasse FS62
+ */
+
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-
-
+//Handles the whole read and write thing for the arrays
 public class ArrayEinlesen {
+	//reads all users from a file and put them into an array (if a file exists)
 	public static String[][] readBenutzer(){
 		 ObjectInputStream is;
 		 String [][] benutzerarray = null;
@@ -20,7 +28,7 @@ public class ArrayEinlesen {
 	        return null;
 	     }
 	  }
-	
+	//reads all houses from a file and put them into an array (if a file exists)
 	 public static String[][][] readWohnungen(){
 		 ObjectInputStream is;
 		 String [][][] wohungsarray;
@@ -35,7 +43,7 @@ public class ArrayEinlesen {
 	         return null;
 	     }
 	  } 
-	
+	//reads the catalog from a file and put it into an array (if a file exists)
 	 public static String[][] readKatalog(){
 		 ObjectInputStream is;
 		 String [][] katalogArray;
