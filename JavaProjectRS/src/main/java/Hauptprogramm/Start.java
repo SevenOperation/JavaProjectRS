@@ -102,8 +102,8 @@ public class Start {
 		}
 	}
 
-	// Ueberprueft die login daten ob ein nutzer mit den Daten schon eistiert
-	// oder ob ein cookie mit Einlogdaten da ist
+	// Validates the login data to make sure there is one user with this data registered
+	// or if the user has a cookie with the login data
 	@POST
 	@Path("/einloggen")
 	public Response einloggen(@FormParam("vn") String vorname, @FormParam("nn") String nachname,
@@ -141,6 +141,7 @@ public class Start {
 	@GET
 	@Path("/AdminInterface")
 	@Produces({ MediaType.TEXT_HTML })
+	//Returns the html page for the webinterface
 	public FileInputStream adminInterfaceGet(@FormParam("preis") String preis,
 			@FormParam("beschreibung") String beschreibung, @FormParam("groese") String groese,
 			@FormParam("imagepfad") String imagepfad, @CookieParam("LoginData") String logindata) throws Exception {
@@ -157,6 +158,7 @@ public class Start {
 
 	@POST
 	@Path("/WohnungAnlegen")
+	//Handles a create House request and checks if he is a admin
 	public Response wohnungAnlegenPOST(@FormParam("preis") String preis, @FormParam("beschreibung") String beschreibung,
 			@FormParam("groese") String groese, @FormParam("imagepfad") String imagepfad,
 			@CookieParam("LoginData") String logindata) throws Exception {
@@ -181,6 +183,7 @@ public class Start {
 	@GET
 	@Path("/WohnungAnlegen")
 	@Produces({ MediaType.TEXT_HTML })
+	//Returns the html formular for creating a House
 	public String wohnungAnlegenGET(@CookieParam("LoginData") String logindata) throws FileNotFoundException {
 		System.out.println(logindata);
 
@@ -199,6 +202,7 @@ public class Start {
 	@GET
 	@Path("/gebuchteWohnungen")
 	@Produces({ MediaType.TEXT_HTML })
+	//Returns a html page which displays all Houses which are booked from a specific user
 	public String gebuchteWohnungen(@CookieParam("LoginData") String logindata) {
 		boolean eingelogt = false;
 		eingelogt = logedIn(logindata);
@@ -253,6 +257,7 @@ public class Start {
 	@POST
 	@Path("/buchen")
 	@Produces({ MediaType.TEXT_HTML })
+	//Returns the same as the wohnungenAnzeige function but displays only Houses which a not booked between an specific period
 	public String suchErgebnisse(@CookieParam("LoginData") String logindata, @FormParam("von") String von,
 			@FormParam("bis") String bis) throws ParseException {
 		if (Ueberpruefer.datumsValidierung(von + "-" + bis)) {
@@ -416,6 +421,7 @@ public class Start {
 	@POST
 	@Path("/booking.yeah")
 	@Produces({ MediaType.TEXT_HTML })
+	//Method which delegates the booking request and return a status
 	public String buchen(@FormParam("von") String von, @FormParam("bis") String bis,
 			@FormParam("wohnung") String wohnung, @CookieParam("LoginData") String logindata) {
 		if (logedIn(logindata)) {
@@ -440,6 +446,7 @@ public class Start {
 		}
 	}
 
+	//Method for checking if logindata is valid (if a user with this information is registered)
 	public boolean logedIn(String logindata) {
 		if (logindata == null) {
 			System.out.println(logindata);
@@ -455,6 +462,7 @@ public class Start {
 
 	@GET
 	@Path("/forbidden")
+	//Returns a html page which shows up if you enter a paga without being logged in
 	public FileInputStream forbidden() {
 		try {
 			return new FileInputStream(
@@ -474,6 +482,7 @@ public class Start {
 
 	@GET
 	@Path("/logout")
+	//Clearing the cookie if one exists
 	public Response logout(@CookieParam("LoginData") Cookie cookie) throws URISyntaxException {
 		if (cookie != null) {
 			ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung"));
