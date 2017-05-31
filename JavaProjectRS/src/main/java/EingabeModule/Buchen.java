@@ -46,7 +46,7 @@ public class Buchen {
 			buffer[wohnung][buffer[wohnung].length - 1][0] = vorname;
 			buffer[wohnung][buffer[wohnung].length - 1][1] = nachname;
 			buffer[wohnung][buffer[wohnung].length - 1][2] = zeitraum;
-			buffer[wohnung][buffer[wohnung].length - 1][3] = null; // Warte auf methode zum Preisausrechenen
+			buffer[wohnung][buffer[wohnung].length - 1][3] = "" + preisBerechnen(zeitraum, katalog[wohnung][0]); // Warte auf methode zum Preisausrechenen
 			wohnungen = buffer;
 			ArraySpeichern.save(wohnungen);
 			return wohnungen;

@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.text.ParseException;
 import java.util.Scanner;
 
 import javax.ws.rs.CookieParam;
@@ -49,7 +50,8 @@ public class Test {
 	public String showHomepgae(@CookieParam("LoginData") String logindata) throws FileNotFoundException {
 		String html = HtmlExtension.normalHtmlHead("Homepage");
 		html += HtmlExtension.dropdownScript();
-		html += "</head><body style='background-image: url(/JavaProjectRS/AlphaUpdate.jpg);  background-size: cover;'>";
+		html += "\n</head>"
+				+ "\n<body style='background-image: url(/JavaProjectRS/AlphaUpdate.jpg);  background-size: cover;'>";
 		if(logindata != null && logedIn(logindata)){
 			html += HtmlExtension.normalHtmlBannerLogedIn(logindata);
 			html+= HtmlExtension.dropdownUserMenueHTML();
@@ -225,7 +227,8 @@ public class Test {
 					+ "\n</ul>" + "\n<ul style='margin: 0; list-style: none; float: right;'>"
 					+ "\n<li style='float: left'><a class='einloggenCss' onclick='userMenue()'>"
 					+ logindata.split("-")[0] + "</a></li>" + "\n</ul>" + "\n</div>" + "\n</div>" + "\n</div>"
-					+ HtmlExtension.dropdownUserMenueHTML();
+					+ HtmlExtension.dropdownUserMenueHTML()
+					+ "</div>";
 
 			html += "\n<table border='1' align='center' id='table' style='position: relative'>";
 			if (katalog != null) {
@@ -264,8 +267,10 @@ public class Test {
 	@Path("/buchen")
 	@Produces({ MediaType.TEXT_HTML })
 	public String suchErgebnisse(@CookieParam("LoginData") String logindata, @FormParam("von") String von,
-			@FormParam("bis") String bis) {
+			@FormParam("bis") String bis) throws ParseException {
+		if(Ueberpruefer.datumsValidierung(von+"-"+bis)){
 		String html;
+		boolean[] freieWohnungen = Ueberpruefer.getFreieWohnungen(wohnungen, von +"-"+ bis);
 		boolean eingelogt = false;
 		eingelogt = logedIn(logindata);
 		String[][] gesuchteHaueser = katalog;// Methode Fehlt
@@ -283,6 +288,7 @@ public class Test {
 		if (gesuchteHaueser != null) {
 			html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td></tr>";
 			for (int i = 0; i < gesuchteHaueser.length; i++) {
+				if(i > (freieWohnungen.length -1)  || freieWohnungen[i] == true){
 				html += "\n<tr>";
 				html += "\n<tr>" + "\n<td>" + "\n<p>" + (i + 1) + "</p>" + "\n</td>";
 				for (int x = 0; x < 4; x++) {
@@ -294,6 +300,7 @@ public class Test {
 					}
 				}
 				html += "\n</tr>";
+			  }
 			}
 		} else {
 			html += "<tr><td>Keine Objekte Gefunden</td></tr>";
@@ -307,6 +314,8 @@ public class Test {
 				+ HtmlExtension.htmlend();
 		return html;
 	}
+		return HtmlExtension.htmlBuchungStatusAnzeigen("Das Datum ist nicht korrekt bitte erneut versuchen", "buchen", logindata);
+	}
 
 	@GET
 	@Path("/buchen")
@@ -317,7 +326,7 @@ public class Test {
 		String html;
 		html = HtmlExtension.normalHtmlHead("Buchungsseite");
 		html += HtmlExtension.dropdownScript();
-		html += "\n</head>" + "\n<body>" + "\n<div>";
+		html += "\n</head>" + "\n<body>";
 		if (eingelogt) {
 			html += HtmlExtension.normalHtmlBannerLogedIn(logindata);
 			html += HtmlExtension.dropdownUserMenueHTML();
@@ -353,7 +362,7 @@ public class Test {
 				+ "\n<p>Bis:<input id='bis' name='bis' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
 				+ "\n<button>Suchen</button>\n</form>"
 				+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>"
-				+ HtmlExtension.htmlend();
+				+ "\n" + HtmlExtension.htmlend();
 		return html;
 
 	}
@@ -405,9 +414,13 @@ public class Test {
 			}
 		}
 
-		html += "\n</table>" + "\nVon:<input id='von' placeholder=' Von bsp. 20.06.2010'type='text' required></input>"
-				+ "\nBis:<input id='bis' placeholder=' Bis bsp. 28.06.2010'type='text' required></input>"
-				+ "\n<button onclick='buchen()'>Buchen</button>"
+		html += "\n</table>" 
+				+ "\n<form action='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/booking.yeah' method='POST'>"
+				+ "\nVon:<input id='von'  name='von' placeholder=' Von bsp. 20.06.2010'type='text' required></input>"
+				+ "\nBis:<input id='bis'  name='bis' placeholder=' Bis bsp. 28.06.2010'type='text' required></input>"
+				+ "\nWohnung: <input id='wohnung' name='wohnung' value='"+id+"' readonly></input>"
+				+ "\n<button>Buchen</button>"
+				+ "\n</form>"
 				+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>"
 				+ HtmlExtension.htmlend();
 		return html;
@@ -421,11 +434,18 @@ public class Test {
 		if (logedIn(logindata)) {
 			String[] daten = logindata.split("-");
 			String zeitraum = von + "-" + bis;
-			// Uberpruefung ob die Wohnung beriets belegt ist fehlt
-			Buchen.buchen(wohnungen, Integer.parseInt(wohnung), zeitraum, daten[0], daten[1]);
-			return "Gebucht";
+			try {
+				if(Ueberpruefer.datumsValidierung(zeitraum) && Ueberpruefer.kontrolle(wohnungen, zeitraum, Integer.parseInt(wohnung))){
+				Buchen.buchen(wohnungen, Integer.parseInt(wohnung), zeitraum, daten[0], daten[1]);
+				}else{
+				 return HtmlExtension.htmlBuchungStatusAnzeigen("Ihre Werte wahren nicht korrekt bitte neu eingeben", "buchen", logindata);
+				}
+			} catch (Exception e) {
+				 return HtmlExtension.htmlBuchungStatusAnzeigen("Ein Server fehler ist aufgetreten", "buchen", logindata);
+			}
+			return HtmlExtension.htmlBuchungStatusAnzeigen("Die Wohnung wurde erfolgreich vom "+zeitraum+" gebucht", "buchen", logindata);
 		} else {
-			return forbidden().toString();
+			return forbiddenString();
 		}
 	}
 
@@ -459,6 +479,20 @@ public class Test {
 
 	public String forbiddenString() {
 		return HtmlExtension.gethtmlForbidden();
+	}
+	
+	@GET
+	@Path("/logout")
+	public Response logout(@CookieParam("LoginData") Cookie cookie) throws URISyntaxException{
+		if (cookie != null) {
+			ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung"));
+	        NewCookie newCookie = new NewCookie(cookie, null, 0, false);
+	    	Response r =  rb.cookie(newCookie).build();
+	        return r;
+	    }
+		ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung/forbidden"));
+		Response r = rb.build();
+		return r;
 	}
 
 }

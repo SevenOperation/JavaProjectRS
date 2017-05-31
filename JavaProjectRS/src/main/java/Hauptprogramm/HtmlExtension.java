@@ -45,11 +45,12 @@ public class HtmlExtension {
    }
    public static String dropdownUserMenueHTML(){
 	   String html = "\n<div style='width: 1080px; margin-left: auto; margin-right: auto; padding: 0;'>"
-				+ "\n<div style='position: absolute; z-index:2' id='test' class='drop2' align='center'>"
+				+ "\n <div style='position: absolute; z-index:2' id='test' class='drop2' align='center'>"
 				+ "\n <a style='color:black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/buchungStornieren'>Buchung Stornieren</a>"
 				+ "\n <a style='color:black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/gebuchteWohnungen'>Buchungen</a>"
-				+ "\n</div>" ;
-				//+ "\n</div>";
+				+ "\n <a style='color:black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/logout'>LogOut</a>"
+				+ "\n</div>"
+				+ "\n</div>";
 	   return html;
    }
    public static String normalHtmlHead(String titel){
@@ -82,7 +83,7 @@ public class HtmlExtension {
 				html+= "\n</ul>" + "\n<ul style='margin: 0; list-style: none; float: right;'>"
 			    + "\n<li style='float: left'><a class='einloggenCss' onclick='userMenue()'>" + logindata.split("-")[0]
 			    + "</a></li>"
-				+ "\n</ul>" + "\n</div>" + "\n</div>" + "\n</div>";
+				+ "\n</ul>" + "\n</div>" + "\n</div>";
 	   return html;
    }
    
@@ -95,7 +96,7 @@ public class HtmlExtension {
 	   return html;
    }
    public static String htmlend(){
-	   return "</div></body></html>";
+	   return "</body>\n</html>";
    }
    
    public static String htmlWohnungAnlegen(){
@@ -108,5 +109,10 @@ public class HtmlExtension {
 + "</form>";
 	   return html;
    }
-	
+public static String htmlBuchungStatusAnzeigen(String text, String voherigeSeite, String logindata){
+	String html = normalHtmlHead("Status") 
+			+ "<meta charset='UTF-8' http-equiv='refresh' content='5; URL=/JavaProjectRS/restful-services/FerienWohnungVerwaltung/"+ voherigeSeite +"'>"
+			+ dropdownScript()+"</head>" +  normalHtmlBannerLogedIn(logindata) + dropdownUserMenueHTML() + "<p>"+ text +"</p>" + htmlend();
+	return html;
+}
 }

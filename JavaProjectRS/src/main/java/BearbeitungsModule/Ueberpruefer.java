@@ -62,14 +62,98 @@ public class Ueberpruefer {
 						Date anfang = sdf.parse(datum[0]);
 						Calendar c = Calendar.getInstance();
 						c.add(Calendar.DAY_OF_MONTH, 1);
-						anfang.after(c.getTime());
+						if(anfang.after(c.getTime())){
+						  return true;	
+						}
 					} catch (ParseException e) {
 						return false;
 					}
-					return true;
 				}
 			}
 		}
 		return false;
+	}
+	
+	public static boolean datumsValidierung(String datum){
+		String[] vonBis = datum.split("-");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy");
+		sdf.setLenient(false);
+		try {
+			System.out.println(vonBis[0]);
+			Date dateV = sdf.parse(vonBis[0]);
+			Date dateB = sdf.parse(vonBis[1]);
+			if(!dateV.before(dateB)){
+				return false;
+			}
+		} catch (ParseException e1) {
+			return false;
+		}
+		for(int i = 0; i < 2; i++){
+		try {
+			Date date = sdf.parse(vonBis[i]);
+			if(date.after(new Date()) && vonBis[i].split("\\.")[2].equals("" + Calendar.getInstance().get(Calendar.YEAR))){
+				System.out.println("Ihre Datum eingabe war richtig");
+				date.after(new Date());
+			}else{
+				return false;
+			}
+			
+		} catch (ParseException e) {
+			System.out.println("Datum ist nicht richtig");
+			return false;
+		}
+		}
+		return true;
+
+	}
+
+	public static boolean kontrolle(String wohn[][][],String datum, int wohnung) throws ParseException{ // Methode zur Kontrolle ob Wohnungen zu dem angegeben Zeitraum frei sind.
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy");
+		sdf.setLenient(false);
+		String[] zubuchenderZeitraum  = datum.split("-");
+		Date dateBV = sdf.parse(zubuchenderZeitraum[0]);
+		Date dateBB = sdf.parse(zubuchenderZeitraum[1]);
+		if(wohn != null && wohn[wohnung] != null){
+		for(int i = 0; i < wohn[wohnung].length; i++){
+			String[] gebuchterzeitraum  = wohn[wohnung][i][2].split("-");
+			Date dateGV = sdf.parse(gebuchterzeitraum[0]);
+			Date dateGB = sdf.parse(gebuchterzeitraum[1]);
+			if(dateGB.before(dateBV) ||  dateGB.equals(dateBV) || dateGV.after(dateBB) || dateGV.equals(dateBB)){
+				
+			}else{
+				return false;
+			}
+			
+		}
+	 }
+		 
+	return true;
+	}
+	
+	public static boolean[] getFreieWohnungen(String wohn[][][],String datum) throws ParseException{ // Methode zur Kontrolle ob Wohnungen zu dem angegeben Zeitraum frei sind.
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy");
+		boolean[] freieWohnungen = new boolean[wohn.length];
+		sdf.setLenient(false);
+		String[] zubuchenderZeitraum  = datum.split("-");
+		Date dateBV = sdf.parse(zubuchenderZeitraum[0]);
+		Date dateBB = sdf.parse(zubuchenderZeitraum[1]);
+		boolean frei = true;
+		if(wohn != null){
+		for(int x = 0; x < wohn.length; x++){
+		for(int i = 0; i < wohn[x].length; i++){
+			String[] gebuchterzeitraum  = wohn[x][i][2].split("-");
+			Date dateGV = sdf.parse(gebuchterzeitraum[0]);
+			Date dateGB = sdf.parse(gebuchterzeitraum[1]);
+			if(dateGB.before(dateBV) ||  dateGB.equals(dateBV) || dateGV.after(dateBB) || dateGV.equals(dateBB)){
+			
+			}else{
+				frei = false;
+			}
+		}
+		freieWohnungen[x] = frei;
+		frei = true;
+	 }
+	}
+	return freieWohnungen;
 	}
 }
