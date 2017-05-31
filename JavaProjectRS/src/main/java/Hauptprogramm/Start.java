@@ -33,7 +33,7 @@ import EingabeModule.Benutzer;
 import EingabeModule.Buchen;
 import EingabeModule.Wohnung;
 
-//WebService which handels the requests.
+//WebService which handels the requests (Major Class).
 @Path("/FerienWohnungVerwaltung")
 public class Start {
 	// String cfp =
