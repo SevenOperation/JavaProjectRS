@@ -1,5 +1,11 @@
 package BearbeitungsModule;
-
+/**
+ * Date: 31.5.17
+ * @author Paul Adamczyk
+ * @version 0.9
+ * Name: JavaProjectRS
+ * Klasse FS62
+ */
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

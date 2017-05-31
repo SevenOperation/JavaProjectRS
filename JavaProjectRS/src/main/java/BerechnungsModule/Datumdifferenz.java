@@ -2,7 +2,13 @@ package BerechnungsModule;
 
 import java.util.Calendar;
 import EingabeModule.ArrayEinlesen;
-
+/**
+ * Date: 31.5.17
+ * @author Adil Iqbal
+ * @version 0.9
+ * Name: JavaProjectRS
+ * Klasse FS62
+ */
 public class Datumdifferenz {
 
 	public static String statistik(int wohn) {
