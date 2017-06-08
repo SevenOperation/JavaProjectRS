@@ -14,7 +14,7 @@ import AusgabeModule.ArraySpeichern;
 //TestKlass not used (No comment except how the arrays are sorted)
 public class Start {
 	//benutzer[1] Anzahl der Benutzer [0,1,2] Vorname, Nachname, Adresse
-	//wohungsarray[4]Anzahl der Wohnungen[x] Zeitraum (23.4.2017 - 28.4.2017) [0,1,2,3] Benutzerdaten (Vorname , Nachname, Preis , Zeitraum)
+	//wohungsarray[4]Anzahl der Wohnungen[x] Zeitraum (23.4.2017 - 28.4.2017) [0,1,2,3] Benutzerdaten (Vorname , Nachname, Zeitraum, Preis)
 	//katalogArray[4] Anzahl der Wohnungen[4] (Preis,Beschreibung,Größe,Imagepfad)
  static String[][] benutzer = new String[1][3];
  static String[][][] wohungsarray = new String[2][2][4];

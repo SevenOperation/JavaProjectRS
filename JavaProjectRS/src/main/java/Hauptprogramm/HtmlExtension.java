@@ -11,43 +11,60 @@ public class HtmlExtension {
 	// returns the html code for a dropdown script
 	public static String dropdownScript() {
 		String html = "\n<script type='text/javascript'>function userMenue(){"
-				+ "\n document.getElementById('test').classList.toggle('show');"
-				// + "\n
-				// document.getElementById('table').classList.toggle('table');"
-				+ "\n }" + "\n window.onclick = function(event) {"
+				+ "\n if(document.getElementById('register')){"
+				+ "\n document.getElementById('register').classList.remove('show');"
+				+ "\n }"
+				+ "\n document.getElementById('login').classList.toggle('show');"
+				+ "\n }"
+				+ "function registerUser(){"
+				+ "\n document.getElementById('login').classList.remove('show');"
+				+ "\n document.getElementById('register').classList.toggle('show');"
+				+ "\n }"
+				+ "\n window.onclick = function(event) {"
 				+ "\n if (!event.target.matches('.input') && !event.target.matches('.einloggenCss')) {"
 				+ "\n var dropdowns = document.getElementsByClassName('drop2');"
-				// + "\n var tables = document.getElementsByClassName('table');"
 				+ "\n var i; for (i = 0; i < dropdowns.length; i++) {" + "\n var openDropdown = dropdowns[i];"
 				+ "\n if (openDropdown.classList.contains('show')) {" + "\n openDropdown.classList.remove('show');"
 				+ "\n }" + "\n }"
-				// + "\n for (i = 0; i < tables.length; i++) {"
-				// + "\n var openTables = tables[i];"
-				// + "\n if (openTables.classList.contains('table')) {"
-				// + "\n openTables.classList.remove('table');"
-				// + "\n }"
-				// + "\n }"
+			
 				+ "\n }" + "\n } \n </script>";
 		return html;
 	}
 
-	// returns the html code for a dropdown loginWindow
+	// returns the html code for a dropdown login/register window
 	public static String dropdownLoginHTML() {
 		String html = "<div style='width: 960px; margin-left: auto; margin-right: auto;'>"
-				+ "<div id='test' style='width: 340px;' class='drop2' align='center'>"
+				+ "<div id='login' style='width: 340px;' class='drop2' align='center'>"
 				+ "<form action='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/einloggen' method='post'>"
 				+ "<p>" + "<input class='input' id='vn' name='vn' type='text' placeholder='Vorname'></input>" + "</p>"
 				+ "<p>" + "<input class='input' id='nn' name='nn' type='text' placeholder='Nachname'></input>" + "</p>"
 				+ "<p>" + "<button type='submit'>Einloggen</button>" + "</p>" + "</form>" + "</div>";
-		// + "</div>";
+		html += "<div id='register' style='width: 340px;' class='drop2' align='center'>"
+				+ "<form action='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/registrieren' method='post'>"
+				+ "<p>" + "<input class='input' id='vn' name='vn' type='text' placeholder='Vorname'></input>" + "</p>"
+				+ "<p>" + "<input class='input' id='nn' name='nn' type='text' placeholder='Nachname'></input>" + "</p>"
+				+ "<p>" + "<input class='input' id='ad' name='ad' type='text' placeholder='Adresse' required='required'></input>"+ "</p>"
+				+ "<p>" + "<button type='submit'>Einloggen</button>" + "</p>" + "</form>" + "</div>";
 		return html;
 	}
+	
+	
 
 	// returns the html code for a dropdown user menu
 	public static String dropdownUserMenueHTML() {
 		String html = "\n<div style='width: 1080px; margin-left: auto; margin-right: auto; padding: 0;'>"
-				+ "\n <div style='position: absolute; z-index:2' id='test' class='drop2' align='center'>"
-				+ "\n <a style='color:black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/buchungStornieren'>Buchung Stornieren</a>"
+				+ "\n <div style='position: absolute; z-index:2' id='login' class='drop2' align='center'>"
+				+ "\n <a style='color:black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/gebuchteWohnungen'>Buchungen</a>"
+				+ "\n <a style='color:black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/logout'>LogOut</a>"
+				+ "\n</div>" + "\n</div>";
+		return html;
+	}
+	
+	public static String dropdownAdminInterface() {
+		String html = "\n<div style='width: 1080px; margin-left: auto; margin-right: auto; padding: 0;'>"
+				+ "\n <div style='position: absolute; z-index:2' id='login' class='drop2' align='center'>"
+				+ "\n <a style='color: black;' href'/JavaProjectRS/restful-services/FerienWohnungVerwaltung/WohnungAnlegen'>Wohnunganlegen</a>"
+				+ "\n <a style='color: black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnungentfernen'>Wohnungentfernen</a>"
 				+ "\n <a style='color:black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/gebuchteWohnungen'>Buchungen</a>"
 				+ "\n <a style='color:black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/logout'>LogOut</a>"
 				+ "\n</div>" + "\n</div>";
@@ -70,7 +87,7 @@ public class HtmlExtension {
 				+ "\n<li><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/buchen'>Katalog</a></li>"
 				+ "\n</ul>" + "\n<ul style='margin: 0; list-style: none; float: right;'>"
 				+ "\n<li style='float: left'><a class='einloggenCss' onclick='userMenue()'>Einloggen</a></li>"
-				+ "\n<li style='float: left'><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/registrieren'>Registrieren</a></li>"
+				+ "\n<li style='float: left'><a class='einloggenCss' onclick='registerUser()'>Registrieren</a></li>"
 				+ "\n</ul>" + "\n</div>" + "\n</div>" + "\n</div>";
 		return html;
 	}

@@ -8,9 +8,6 @@ package Hauptprogramm;
  * Klasse FS62
  */
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -36,18 +33,16 @@ import EingabeModule.Wohnung;
 //WebService which handels the requests (Major Class).
 @Path("/FerienWohnungVerwaltung")
 public class Start {
-	// String cfp =
-	// "C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Homepage.html";
-	String cfp = "/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Homepage.html";
-	String[][] katalog = ArrayEinlesen.readKatalog(); 
+	// Arrays which contain all data
+	String[][] katalog = ArrayEinlesen.readKatalog();
 	String[][][] wohnungen = ArrayEinlesen.readWohnungen();
 	String[][] benutzer = ArrayEinlesen.readBenutzer();
 
 	@POST
 	@GET
 	@Produces({ MediaType.TEXT_HTML })
-	//Method which returns the Homepage as a String
-	public String showHomepgae(@CookieParam("LoginData") String logindata) throws FileNotFoundException {
+	// Method which returns the Homepage as a String
+	public String showHomepgae(@CookieParam("LoginData") String logindata){
 		String html = HtmlExtension.normalHtmlHead("Homepage");
 		html += HtmlExtension.dropdownScript();
 		html += "\n</head>"
@@ -61,18 +56,6 @@ public class Start {
 		}
 		html += HtmlExtension.htmlend();
 		return html;
-	}
-
-	@GET
-	@Produces({ MediaType.TEXT_HTML })
-	@Path("/registrieren")
-	//Method which returns a register page
-	public FileInputStream registrieren() throws FileNotFoundException {
-		// cfp =
-		// "C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Registrieren.html";
-		cfp = "/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/Registrieren.html";
-		File file = new File(cfp);
-		return new FileInputStream(file);
 	}
 
 	@POST
@@ -102,24 +85,16 @@ public class Start {
 		}
 	}
 
-	// Validates the login data to make sure there is one user with this data registered
-	// or if the user has a cookie with the login data
 	@POST
 	@Path("/einloggen")
+	// Validates the login data to make sure there is one user with this data
+	// registered or if the user has a cookie with the login data
 	public Response einloggen(@FormParam("vn") String vorname, @FormParam("nn") String nachname,
 			@CookieParam("LoginData") String logindata) throws Exception {
 
+		// Kontrolliert die cookie daten oder ob der nutzer hinterlegt ist
 		if (logedIn(logindata) || logedIn(vorname + "-" + nachname)) {
-			logindata = vorname + "-" + nachname;// Kontrolliert
-													// die
-													// cookie
-													// daten
-													// oder
-													// ob
-													// der
-													// nutzer
-													// hinterlegt
-													// ist
+			logindata = vorname + "-" + nachname;
 			if (logindata.split("-")[0].equals("Seven") && logindata.split("-")[1].equals("t")) {
 				ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung/AdminInterface"));
 				NewCookie user = new NewCookie("LoginData", vorname + "-" + nachname + "-" + "true");
@@ -141,24 +116,26 @@ public class Start {
 	@GET
 	@Path("/AdminInterface")
 	@Produces({ MediaType.TEXT_HTML })
-	//Returns the html page for the webinterface
-	public FileInputStream adminInterfaceGet(@FormParam("preis") String preis,
-			@FormParam("beschreibung") String beschreibung, @FormParam("groese") String groese,
-			@FormParam("imagepfad") String imagepfad, @CookieParam("LoginData") String logindata) throws Exception {
+	// Returns the html page for the webinterface
+	public String adminInterfaceGet(@CookieParam("LoginData") String logindata) {
+
 		if (logedIn(logindata) && logindata.split("-")[0].equals("Seven") && logindata.split("-")[1].equals("t")) {
-			cfp = "/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/AdminInterface.html";
-			File file = new File(cfp);
-			return new FileInputStream(file);
+			String html = HtmlExtension.normalHtmlHead("AdminInterface");
+			html += HtmlExtension.dropdownScript();
+			html += "\n</head>"
+					+ "\n<body style='background-image: url(/JavaProjectRS/AlphaUpdate.jpg);  background-size: cover;'>";
+			html += HtmlExtension.normalHtmlBannerLogedIn(logindata);
+			html += HtmlExtension.dropdownAdminInterface();
+			html += HtmlExtension.htmlend();
+			return html;
 		} else {
-			cfp = "/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/forbidden.html";
-			File file = new File(cfp);
-			return new FileInputStream(file);
+			return forbiddenString();
 		}
 	}
 
 	@POST
 	@Path("/WohnungAnlegen")
-	//Handles a create House request and checks if he is a admin
+	// Handles a create House request and checks if he is a admin
 	public Response wohnungAnlegenPOST(@FormParam("preis") String preis, @FormParam("beschreibung") String beschreibung,
 			@FormParam("groese") String groese, @FormParam("imagepfad") String imagepfad,
 			@CookieParam("LoginData") String logindata) throws Exception {
@@ -183,8 +160,8 @@ public class Start {
 	@GET
 	@Path("/WohnungAnlegen")
 	@Produces({ MediaType.TEXT_HTML })
-	//Returns the html formular for creating a House
-	public String wohnungAnlegenGET(@CookieParam("LoginData") String logindata) throws FileNotFoundException {
+	// Returns the html formular for creating a House
+	public String wohnungAnlegenGET(@CookieParam("LoginData") String logindata){
 		System.out.println(logindata);
 
 		if (logedIn(logindata) && logindata.split("-")[0].equals("Seven") && logindata.split("-")[1].equals("t")) {
@@ -202,7 +179,8 @@ public class Start {
 	@GET
 	@Path("/gebuchteWohnungen")
 	@Produces({ MediaType.TEXT_HTML })
-	//Returns a html page which displays all Houses which are booked from a specific user
+	// Returns a html page which displays all Houses which are booked from a
+	// specific user
 	public String gebuchteWohnungen(@CookieParam("LoginData") String logindata) {
 		boolean eingelogt = false;
 		eingelogt = logedIn(logindata);
@@ -223,30 +201,29 @@ public class Start {
 
 			html += "\n<table border='1' align='center' id='table' style='position: relative'>";
 			if (katalog != null) {
-				html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td><td>Aktion</td></tr>";
-				for (int i = 0; i < katalog.length; i++) {
-					html += "\n<tr>" + "\n<td>" + "\n<p>" + (i + 1) + "</p>" + "\n</td>";
-					for (int x = 0; x < 4; x++) {
-						if (x == 3) {
-							html += "\n<td><img src=" + katalog[i][x]
-									+ " width='190' height='108'></td><td><button id='" + i
-									+ "'>Stornieren</button></td>";
-						} else {
-							html += "\n<td>" + katalog[i][x] + "</td>";
+				html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td><td>Gebuchter Zeitraum</td><td>Aktion</td></tr>";
+				for (int i = 0; i < wohnungen.length; i++) {
+					for (int x = 0; x < wohnungen[i].length; x++) {
+						if (wohnungen[i][x][0].equals(logindata.split("-")[0])
+								&& wohnungen[i][x][1].equals(logindata.split("-")[1])) {
+							html += "\n<tr>" + "\n<td>" + "\n<p>" + (i + 1) + "</p>" + "\n</td>";
+							for (int y = 0; y < 4; y++) {
+								if (y == 3) {
+									html += "\n<td><img src=" + katalog[i][y] + " width='190' height='108'></td>"
+											+ "<td>" + wohnungen[i][x][2] + "</td>" + "<td><button id='" + i
+											+ "'>Stornieren</button></td>";
+								} else {
+									html += "\n<td>" + katalog[i][y] + "</td>";
+								}
+							}
 						}
+						html += "\n</tr>";
 					}
-					html += "\n</tr>";
 				}
 			} else {
 				html += "<tr><td>Keine Objekte Vorhanden</td></tr>";
 			}
-			html += "\n</table>"
-					+ "\n <form method='POST' action='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/buchen'>"
-					+ "\n<p>Von:<input id='von' name='von' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
-					+ "\n<p>Bis:<input id='bis' name='bis' type='date' placeholder='bsp. 23.06.2010' required='required'/></p>"
-					+ "\n<button>Suchen</button>\n</form>"
-					+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>"
-					+ HtmlExtension.htmlend();
+			html += HtmlExtension.htmlend();
 			return html;
 		} else {
 			return forbiddenString();
@@ -257,7 +234,8 @@ public class Start {
 	@POST
 	@Path("/buchen")
 	@Produces({ MediaType.TEXT_HTML })
-	//Returns the same as the wohnungenAnzeige function but displays only Houses which a not booked between an specific period
+	// Returns the same as the wohnungenAnzeige function but displays only
+	// Houses which a not booked between an specific period
 	public String suchErgebnisse(@CookieParam("LoginData") String logindata, @FormParam("von") String von,
 			@FormParam("bis") String bis) throws ParseException {
 		if (Ueberpruefer.datumsValidierung(von + "-" + bis)) {
@@ -364,26 +342,32 @@ public class Start {
 	@POST // Request typ
 	@Path("/Wohnung") // unter welcher url die methode aufgerufen wird
 	@Produces({ MediaType.TEXT_HTML }) // Gibt html zurueck
-	public String wohnung(@FormParam("wohnung") String id) {// Gibt eine Html
-															// Seite zurueck die
-															// Informationen
-															// ueber die
-															// Ausgewaehlte
-															// wohnung angibt
+	// Gibt eine Html Seite zurueck die Informationen ueber die Ausgewaehlte
+	// wohnung angibt
+	public String wohnung(@FormParam("wohnung") String id, @CookieParam("LoginData") String logindata) {
+		boolean eingelogt = false;
+		eingelogt = logedIn(logindata);
 		String html;
 		wohnungen = ArrayEinlesen.readWohnungen();
 		if (id == null) {
 			return "<!DOCTYPE html><html><meta http-equiv='refresh' content='5; URL=/JavaProjectRS/restful-services/FerienWohnungVerwaltung/buchen'><head></head><body>Ah ah ah du hast das Zauberwort nicht gesagt!<script></script></body></html>";
 		}
 		int wohnung = Integer.parseInt(id);
-		html = "<!DOCTYPE html>" + "\n<html>" + "\n<head>" + "\n<meta charset='UTF-8'>"
-				+ "\n<title>Insert title here</title>" + "\n</head>" + "\n<body>" + "\n<script type='text/javascript'> "
-				+ "\n function buchen(){" + "\n var von = document.getElementById('von').value;"
+		html = HtmlExtension.normalHtmlHead("Buchen") + HtmlExtension.dropdownScript() + "\n</head>" + "\n<body>"
+				+ "\n<script type='text/javascript'> " + "\n function buchen(){"
+				+ "\n var von = document.getElementById('von').value;"
 				+ "\n var bis = document.getElementById('bis').value" + "\n var req = new XMLHttpRequest();"
 				+ "\n req.open('POST','/JavaProjectRS/restful-services/FerienWohnungVerwaltung/booking.yeah');"
 				+ "\n req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');"
-				+ "\n req.send('von='+von+'&bis='+bis+'&wohnung='+" + id + ");" + "\n}" + "\n</script>"
-				+ "\n<table border='1' align='center' style='position: relative'>";
+				+ "\n req.send('von='+von+'&bis='+bis+'&wohnung='+" + id + ");" + "\n}" + "\n</script>";
+		if (eingelogt) {
+			html += HtmlExtension.normalHtmlBannerLogedIn(logindata);
+			html += HtmlExtension.dropdownUserMenueHTML();
+		} else {
+			html += HtmlExtension.normalHtmlBannerNotLogedIn();
+			html += HtmlExtension.dropdownLoginHTML();
+		}
+		html += "\n<table border='1' align='center' style='position: relative'>";
 		html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td></tr>";
 		html += "\n<tr><td>" + (wohnung + 1) + "</td>";
 		for (int i = 0; i < 4; i++) {
@@ -411,8 +395,8 @@ public class Start {
 				+ "\n<form action='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/booking.yeah' method='POST'>"
 				+ "\nVon:<input id='von'  name='von' placeholder=' Von bsp. 20.06.2010'type='text' required></input>"
 				+ "\nBis:<input id='bis'  name='bis' placeholder=' Bis bsp. 28.06.2010'type='text' required></input>"
-				+ "\nWohnung: <input id='wohnung' name='wohnung' value='" + id + "' readonly></input>"
-				+ "\n<button>Buchen</button>" + "\n</form>"
+				+ "\nWohnung: <input id='wohnung' name='wohnung' value='" + id
+				+ "' readonly style='display: none'></input>" + "\n<button>Buchen</button>" + "\n</form>"
 				+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>"
 				+ HtmlExtension.htmlend();
 		return html;
@@ -421,7 +405,7 @@ public class Start {
 	@POST
 	@Path("/booking.yeah")
 	@Produces({ MediaType.TEXT_HTML })
-	//Method which delegates the booking request and return a status
+	// Method which delegates the booking request and return a status
 	public String buchen(@FormParam("von") String von, @FormParam("bis") String bis,
 			@FormParam("wohnung") String wohnung, @CookieParam("LoginData") String logindata) {
 		if (logedIn(logindata)) {
@@ -446,7 +430,8 @@ public class Start {
 		}
 	}
 
-	//Method for checking if logindata is valid (if a user with this information is registered)
+	// Method for checking if logindata is valid (if a user with this
+	// information is registered)
 	public boolean logedIn(String logindata) {
 		if (logindata == null) {
 			System.out.println(logindata);
@@ -462,27 +447,15 @@ public class Start {
 
 	@GET
 	@Path("/forbidden")
-	//Returns a html page which shows up if you enter a paga without being logged in
-	public FileInputStream forbidden() {
-		try {
-			return new FileInputStream(
-					// new
-					// File("C:/Users/SevenOperation/git/JavaProjectRS/JavaProjectRS/src/main/webapp/forbidden.html"));
-					new File("/data/home/mfernitz/git/JavaProjectRS/JavaProjectRS/src/main/webapp/forbidden.html"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
-
-	}
-
+	// Returns a html page which shows up if you enter a paga without being
+	// logged in
 	public String forbiddenString() {
 		return HtmlExtension.gethtmlForbidden();
 	}
 
 	@GET
 	@Path("/logout")
-	//Clearing the cookie if one exists
+	// Clearing the cookie if one exists
 	public Response logout(@CookieParam("LoginData") Cookie cookie) throws URISyntaxException {
 		if (cookie != null) {
 			ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung"));

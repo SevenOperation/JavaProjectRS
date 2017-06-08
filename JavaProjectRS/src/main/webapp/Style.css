@@ -54,6 +54,7 @@ li{
 }
 .show{
 	display: block;
+	z-index: 3;
 }
 .einloggenCss{
 	cursor: pointer;
