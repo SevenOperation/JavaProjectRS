@@ -205,6 +205,7 @@ public class Start {
 			html += "\n<table border='1' align='center' id='table' style='position: relative'>";
 			if (katalog != null) {
 				html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td><td>Gebuchter Zeitraum</td><td>Aktion</td></tr>";
+				if(wohnungen != null){
 				for (int i = 0; i < wohnungen.length; i++) {
 					if(wohnungen[i] != null){
 					for (int x = 0; x < wohnungen[i].length; x++) {
@@ -224,6 +225,7 @@ public class Start {
 						html += "\n</tr>";
 					}
 					}
+				}
 				}
 			} else {
 				html += "<tr><td>Keine Objekte Vorhanden</td></tr>";

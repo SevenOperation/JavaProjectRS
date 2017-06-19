@@ -138,6 +138,7 @@ public class Ueberpruefer {
 	}
 	//Gibt alle Freien Wohnungen aus
 	public static boolean[] getFreieWohnungen(String wohn[][][],String datum) throws ParseException{ // Methode zur Kontrolle ob Wohnungen zu dem angegeben Zeitraum frei sind.
+		if(wohn != null){
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy");
 		boolean[] freieWohnungen = new boolean[wohn.length];
 		sdf.setLenient(false);
@@ -162,5 +163,9 @@ public class Ueberpruefer {
 	 }
 	}
 	return freieWohnungen;
+	}
+	boolean[] a = new boolean[1];
+	a[0] = false;
+	return a ;
 	}
 }
