@@ -127,7 +127,8 @@ public class Start {
 					+ "\n<body style='background-image: url(/JavaProjectRS/AlphaUpdate.jpg);  background-size: cover;'>";
 			html += HtmlExtension.normalHtmlBannerLogedIn(logindata);
 			html += HtmlExtension.dropdownAdminInterface();
-			html += "<p>Alle Wohnungen sind insgesamt zu:"+ Statistiken.gesamtStatistik() +"</p>";
+			html += "<p>Alle Wohnungen sind insgesamt zu: "+ Statistiken.gesamtStatistik() +"</p>"
+					+ "<p>Alle Wohnungen bringen Einnahmen von insgesamt zu: "+ Statistiken.summeEinnahmenAller() +"€</p>";
 			html += HtmlExtension.htmlend();
 			return html;
 		} else {
@@ -472,5 +473,75 @@ public class Start {
 		Response r = rb.build();
 		return r;
 	}
+	
+	@GET
+	@Path("/Wohnungentfernen")
+	// Returns an html Page for deleting a House
+	public String getWohnungentfernenHTML(@CookieParam("LoginData") String logindata){
+		if (logedIn(logindata) && logindata.split("-")[0].equals("Seven") && logindata.split("-")[1].equals("t")) {
+		String html = HtmlExtension.normalHtmlHead("Wohnungentfernen");
+		html += HtmlExtension.dropdownScript()
+				+ HtmlExtension.normalHtmlBannerLogedIn(logindata)
+				+ HtmlExtension.dropdownAdminInterface()
+				+ HtmlExtension.getWohnungentferenHTMLString()
+				+ HtmlExtension.htmlend();
+		return html;
+		}
+		return forbiddenString();
+	}
+	
+	@POST
+	@Path("/Wohnungentfernen")
+	// Returns an html Page that says if it was possible to delete the house
+	public String Wohnungentfernen(@CookieParam("LoginData") String logindata , @FormParam("wohnung") String wohnung){
+		if (logedIn(logindata) && logindata.split("-")[0].equals("Seven") && logindata.split("-")[1].equals("t")) {
+			if(Ueberpruefer.wohungLoeschenUeberpruefung(wohnungen, Integer.parseInt(wohnung))){
+				Wohnung.wohnungLoeschen(katalog, Integer.parseInt(wohnung));
+			return HtmlExtension.normalHtmlHead("Status")
+				+ "<meta charset='UTF-8' http-equiv='refresh' content='5;"
+				+ " URL='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnungentfernen'>"
+				+ "</head><body>Wohnung wurde Gelöscht</body>";
+			}else{
+			return HtmlExtension.normalHtmlHead("Status")
+						+ "<meta charset='UTF-8' http-equiv='refresh' content='5;"
+						+ " URL='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnungentfernen'>"
+						+ "</head><body>Wohnung konnte nicht Gelöscht werden</body>";
+			}
+		}
+		return forbiddenString();
+	}
 
+	
+	@GET
+	@Path("/ShowStat")
+	// Returns an html that provides a mask for creating stats
+	public String getStatisikenHTML(@CookieParam("LoginData") String logindata , @FormParam("wohnung") String wohnung){
+		if (logedIn(logindata) && logindata.split("-")[0].equals("Seven") && logindata.split("-")[1].equals("t")) {
+				String html = HtmlExtension.normalHtmlHead("Wohnungentfernen");
+				html += HtmlExtension.dropdownScript()
+						+ HtmlExtension.normalHtmlBannerLogedIn(logindata)
+						+ HtmlExtension.dropdownAdminInterface()
+						+ HtmlExtension.getStatistikenHTMLString()
+						+ HtmlExtension.htmlend();
+				return html;
+		}
+		return forbiddenString();
+	}
+	
+	@POST
+	@Path("/ShowStat")
+	// Returns an html that shows the generated Stat
+	public String setStat(@CookieParam("LoginData") String logindata , @FormParam("wohnung") String wohnung){
+		if (logedIn(logindata) && logindata.split("-")[0].equals("Seven") && logindata.split("-")[1].equals("t")) {
+				String html = HtmlExtension.normalHtmlHead("Wohnungentfernen");
+				html += HtmlExtension.dropdownScript()
+						+ HtmlExtension.normalHtmlBannerLogedIn(logindata)
+						+ HtmlExtension.dropdownAdminInterface()
+						+ "<p>Benutzung in %: "+Statistiken.statistik(Integer.parseInt(wohnung))+ "</p>"
+						+ "<p>Einnahmen der Wohnung: "+Statistiken.summeEinnahmenWohnung(Integer.parseInt(wohnung)) +" €</p>"
+						+ HtmlExtension.htmlend();
+				return html;
+		}
+		return forbiddenString();
+	}
 }

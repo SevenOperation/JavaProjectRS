@@ -59,12 +59,13 @@ public class HtmlExtension {
 				+ "\n</div>" + "\n</div>";
 		return html;
 	}
-	
+	// returns the html code for a admininterface menu
 	public static String dropdownAdminInterface() {
 		String html = "\n<div style='width: 1080px; margin-left: auto; margin-right: auto; padding: 0;'>"
 				+ "\n <div style='position: absolute; z-index:2' id='login' class='drop2' align='center'>"
 				+ "\n <a style='color: black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/WohnungAnlegen'>Wohnunganlegen</a>"
 				+ "\n <a style='color: black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnungentfernen'>Wohnungentfernen</a>"
+				+ "\n <a style='color: black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/ShowStat'>Statistik Generieren</a>"
 				+ "\n <a style='color:black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/gebuchteWohnungen'>Buchungen</a>"
 				+ "\n <a style='color:black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/logout'>LogOut</a>"
 				+ "\n</div>" + "\n</div>";
@@ -127,7 +128,7 @@ public class HtmlExtension {
 		String html = "<form action=''  method='post'>"
 				+ "<p>Preis:<input id=preis' required='required' name='preis' type='text' placeholder='Preis'></input><p>"
 				+ "<p>Beschreibung:<textarea  required='required' name='beschreibung' cols=''></textarea></p>"
-				+ "<p>Größe:<input id='groese' required='required' name='groese' type='text' placeholder='Größe'></input></p>"
+				+ "<p>Groese:<input id='groese' required='required' name='groese' type='text' placeholder='Größe'></input></p>"
 				+ "<p>Imagepfad:<input id='imagepfad' required='required' name='imagepfad' type='text' placeholder='Imagepfad'></input></p>"
 				+ "<p><button type='submit'>Wohnung Anlegen</button></p>" + "</form>";
 		return html;
@@ -139,6 +140,23 @@ public class HtmlExtension {
 				+ "<meta charset='UTF-8' http-equiv='refresh' content='5; URL=/JavaProjectRS/restful-services/FerienWohnungVerwaltung/"
 				+ voherigeSeite + "'>" + dropdownScript() + "</head>" + normalHtmlBannerLogedIn(logindata)
 				+ dropdownUserMenueHTML() + "<p>" + text + "</p>" + htmlend();
+		return html;
+	}
+	
+	// returns the html code for a formular for deleting a House
+	public static String getWohnungentferenHTMLString(){
+		String html = "<form method='POST' action='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnungentfernen'>"
+				+ "<input name='wohnung' type='number' />"
+				+ "<button type='submit'>Entfernen</button>"
+				+ "</form>";
+		return html;
+	}
+	// returns the html code for a formular for generating a Stat
+	public static String getStatistikenHTMLString(){
+		String html = "<form method='POST' action='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/ShowStat'>"
+				+ "<input name='wohnung' type='number' />"
+				+ "<button type='submit'>Statistik generieren</button>"
+				+ "</form>";
 		return html;
 	}
 }
