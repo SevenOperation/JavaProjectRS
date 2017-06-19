@@ -396,7 +396,7 @@ public class Start {
 				+ "\nVon:<input id='von'  name='von' placeholder=' Von bsp. 20.06.2010'type='text' required></input>"
 				+ "\nBis:<input id='bis'  name='bis' placeholder=' Bis bsp. 28.06.2010'type='text' required></input>"
 				+ "\nWohnung: <input id='wohnung' name='wohnung' value='" + id
-				+ "' readonly style='display: none'></input>" + "\n<button>Buchen</button>" + "\n</form>"
+				+ "' readonly style='display: none'></input>" + "\n<button type='submit'>Buchen</button>" + "\n</form>"
 				+ "\n<a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Zurück</a>"
 				+ HtmlExtension.htmlend();
 		return html;
@@ -416,10 +416,11 @@ public class Start {
 						&& Ueberpruefer.kontrolle(wohnungen, zeitraum, Integer.parseInt(wohnung))) {
 					Buchen.buchen(wohnungen, Integer.parseInt(wohnung), zeitraum, daten[0], daten[1]);
 				} else {
-					return HtmlExtension.htmlBuchungStatusAnzeigen("Ihre Werte wahren nicht korrekt bitte neu eingeben",
+					return HtmlExtension.htmlBuchungStatusAnzeigen("Ihre Werte waren nicht korrekt bitte neu eingeben",
 							"buchen", logindata);
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				return HtmlExtension.htmlBuchungStatusAnzeigen("Ein Server fehler ist aufgetreten", "buchen",
 						logindata);
 			}

@@ -119,7 +119,7 @@ public class Ueberpruefer {
 		String[] zubuchenderZeitraum  = datum.split("-");
 		Date dateBV = sdf.parse(zubuchenderZeitraum[0]);
 		Date dateBB = sdf.parse(zubuchenderZeitraum[1]);
-		if(wohn != null && wohn[wohnung] != null){
+		if(wohn != null && wohn.length > wohnung +1 && wohn[wohnung] != null ){
 		for(int i = 0; i < wohn[wohnung].length; i++){
 			String[] gebuchterzeitraum  = wohn[wohnung][i][2].split("-");
 			Date dateGV = sdf.parse(gebuchterzeitraum[0]);

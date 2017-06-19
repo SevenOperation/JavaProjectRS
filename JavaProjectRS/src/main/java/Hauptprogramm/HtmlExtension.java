@@ -44,7 +44,7 @@ public class HtmlExtension {
 				+ "<p>" + "<input class='input' id='vn' name='vn' type='text' placeholder='Vorname'></input>" + "</p>"
 				+ "<p>" + "<input class='input' id='nn' name='nn' type='text' placeholder='Nachname'></input>" + "</p>"
 				+ "<p>" + "<input class='input' id='ad' name='ad' type='text' placeholder='Adresse' required='required'></input>"+ "</p>"
-				+ "<p>" + "<button type='submit'>Einloggen</button>" + "</p>" + "</form>" + "</div>";
+				+ "<p>" + "<button type='submit'>Registrieren</button>" + "</p>" + "</form>" + "</div>";
 		return html;
 	}
 	
@@ -63,7 +63,7 @@ public class HtmlExtension {
 	public static String dropdownAdminInterface() {
 		String html = "\n<div style='width: 1080px; margin-left: auto; margin-right: auto; padding: 0;'>"
 				+ "\n <div style='position: absolute; z-index:2' id='login' class='drop2' align='center'>"
-				+ "\n <a style='color: black;' href'/JavaProjectRS/restful-services/FerienWohnungVerwaltung/WohnungAnlegen'>Wohnunganlegen</a>"
+				+ "\n <a style='color: black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/WohnungAnlegen'>Wohnunganlegen</a>"
 				+ "\n <a style='color: black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnungentfernen'>Wohnungentfernen</a>"
 				+ "\n <a style='color:black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/gebuchteWohnungen'>Buchungen</a>"
 				+ "\n <a style='color:black;' href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/logout'>LogOut</a>"
