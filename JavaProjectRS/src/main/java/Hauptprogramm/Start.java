@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import BearbeitungsModule.Ueberpruefer;
+import BerechnungsModule.Statistiken;
 import EingabeModule.ArrayEinlesen;
 import EingabeModule.Benutzer;
 import EingabeModule.Buchen;
@@ -126,6 +127,7 @@ public class Start {
 					+ "\n<body style='background-image: url(/JavaProjectRS/AlphaUpdate.jpg);  background-size: cover;'>";
 			html += HtmlExtension.normalHtmlBannerLogedIn(logindata);
 			html += HtmlExtension.dropdownAdminInterface();
+			html += "<p>Alle Wohnungen sind insgesamt zu:"+ Statistiken.gesamtStatistik() +"</p>";
 			html += HtmlExtension.htmlend();
 			return html;
 		} else {
@@ -203,6 +205,7 @@ public class Start {
 			if (katalog != null) {
 				html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td><td>Gebuchter Zeitraum</td><td>Aktion</td></tr>";
 				for (int i = 0; i < wohnungen.length; i++) {
+					if(wohnungen[i] != null){
 					for (int x = 0; x < wohnungen[i].length; x++) {
 						if (wohnungen[i][x][0].equals(logindata.split("-")[0])
 								&& wohnungen[i][x][1].equals(logindata.split("-")[1])) {
@@ -218,6 +221,7 @@ public class Start {
 							}
 						}
 						html += "\n</tr>";
+					}
 					}
 				}
 			} else {

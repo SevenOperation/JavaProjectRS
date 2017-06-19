@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+//Beinhaltet alle Methoden zu Uberpruefen von Wohnungen 
 public class Ueberpruefer {
 	public static boolean registrierDatenPruefen(String [][] benutzer, String vorname, String nachname){
 		   if(benutzer != null){
@@ -23,12 +24,12 @@ public class Ueberpruefer {
 		   }
 		   return true;
 	   }
-	
-	public static boolean hausAnlegenUeberpruefen(String preis, String groeße){
+	//Uberprueft ob wohnungs anlage daten richtig sind
+	public static boolean hausAnlegenUeberpruefen(String preis, String groese){
 		try{
 		double preisD = Double.parseDouble(preis);
-		double groeßeD = Double.parseDouble(groeße);
-		if(preisD > 1 && groeßeD > 10){
+		double groeseD = Double.parseDouble(groese);
+		if(preisD > 1 && groeseD > 10){
 			return true;
 		}else{
 			return false;
@@ -37,7 +38,7 @@ public class Ueberpruefer {
 			return false;
 		}
 	   }
-	
+	//Uberprueft nutzer vorhanden
 	public static boolean loginUberpruefung(String [][] benutzer, String vorname, String nachname){
 		if(benutzer != null){
 		for(int i = 0; i < benutzer.length; i++){
@@ -48,7 +49,7 @@ public class Ueberpruefer {
 		}
 		return false;
 	}
-	
+	//Uberprueft ob wohnung geloescht werden kann
 	public static boolean wohungLoeschenUeberpruefung(String [][][] wohnungen, int wohnung){
 		if(wohnungen != null){
 			if(wohnungen[wohnung] != null && wohnungen[wohnung].length == 0){
@@ -57,7 +58,7 @@ public class Ueberpruefer {
 		}
 		return false;
 	}
-	
+	//Uberprueft ob buchung storniert werden kann
 	public static boolean stornierPruefer(String [][][] wohnungen, int wohnung, String vorname , String nachname, String zeitraum){
 		if(wohnungen != null &&  wohnungen[wohnung] != null && wohnungen[wohnung].length > 0){
 			for(int i = 0; i < wohnungen[wohnung].length; i++){
@@ -79,7 +80,7 @@ public class Ueberpruefer {
 		}
 		return false;
 	}
-	
+	//Uberprueft ob datum korrekt
 	public static boolean datumsValidierung(String datum){
 		String[] vonBis = datum.split("-");
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy");
@@ -112,7 +113,7 @@ public class Ueberpruefer {
 		return true;
 
 	}
-
+	//Uberprueft ob wohnung frei ist
 	public static boolean kontrolle(String wohn[][][],String datum, int wohnung) throws ParseException{ // Methode zur Kontrolle ob Wohnungen zu dem angegeben Zeitraum frei sind.
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy");
 		sdf.setLenient(false);
@@ -135,7 +136,7 @@ public class Ueberpruefer {
 		 
 	return true;
 	}
-	
+	//Gibt alle Freien Wohnungen aus
 	public static boolean[] getFreieWohnungen(String wohn[][][],String datum) throws ParseException{ // Methode zur Kontrolle ob Wohnungen zu dem angegeben Zeitraum frei sind.
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy");
 		boolean[] freieWohnungen = new boolean[wohn.length];

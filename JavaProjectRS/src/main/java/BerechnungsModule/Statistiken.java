@@ -9,8 +9,10 @@ import EingabeModule.ArrayEinlesen;
  * Name: JavaProjectRS
  * Klasse FS62
  */
-public class Datumdifferenz {
+//Kalsse die Statistiken ausgibt
+public class Statistiken {
 
+	//Gibt nutzung einer Wohnungen aus in %
 	public static String statistik(int wohn) {
 		double monatstage = (double) 365 / 12;
 
@@ -33,7 +35,8 @@ public class Datumdifferenz {
 		return "" + gebuchtetage / 365 * 100;
 
 	}
-
+	
+	//Gibt nutzung aller Wohnungen aus in %
 	public static String gesamtStatistik() {
 		double monatstage = (double) 365 / 12;
 		double auslastung = 0.0;
@@ -62,6 +65,7 @@ public class Datumdifferenz {
 
 	}
 	
+	//Gibt Einnahmen einer Wohnungen aus in €
 	public static String summeEinnahmenWohnung(int wohn) {
 		double summe = 0.0;
 		String[][][] wohnungen = ArrayEinlesen.readWohnungen();
@@ -72,6 +76,7 @@ public class Datumdifferenz {
        return "" + summe;
 	}
 	
+	//Gibt Einnahmen aller Wohnungen aus in €
 	public static String summeEinnahmenAller() {
 		double summe = 0.0;
 		String[][][] wohnungen = ArrayEinlesen.readWohnungen();
