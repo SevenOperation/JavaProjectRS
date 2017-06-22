@@ -298,7 +298,7 @@ public class Start {
 					+ "\nvar t = $(req);" + "\n$('body').append(req);" + "\n$(req).submit();" + "\n}" + "\n</script>";
 			html += "\n<table border='1' align='center' id='table' style='position: relative'>";
 			if (gesuchteHaueser != null) {
-				html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td></tr>";
+				html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Gr&ouml&szlige in m&sup2</td><td>Bild</td></tr>";
 				for (int i = 0; i < gesuchteHaueser.length; i++) {
 					if (i > (freieWohnungen.length - 1) || freieWohnungen[i] == true) {
 						html += "\n<tr>";
@@ -353,7 +353,7 @@ public class Start {
 				+ "\nvar t = $(req);" + "\n$('body').append(req);" + "\n$(req).submit();" + "\n}" + "\n</script>"
 				+ "\n<table border='1' align='center' id='table' style='position: relative'>";
 		if (katalog != null) {
-			html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Größe m²</td><td>Bild</td></tr>";
+			html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>Gr&ouml&szligee m&sup2</td><td>Bild</td></tr>";
 			for (int i = 0; i < katalog.length; i++) {
 				html += "\n<tr>" + "\n<td>" + "\n<p>" + (i + 1) + "</p>" + "\n</td>";
 				for (int x = 0; x < 4; x++) {
