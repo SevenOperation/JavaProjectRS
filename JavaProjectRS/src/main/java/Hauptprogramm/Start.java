@@ -38,6 +38,8 @@ public class Start {
 	String[][] katalog = ArrayEinlesen.readKatalog();
 	String[][][] wohnungen = ArrayEinlesen.readWohnungen();
 	String[][] benutzer = ArrayEinlesen.readBenutzer();
+	
+	String fehlerMeldung = "";
 
 	@POST
 	@GET
@@ -72,7 +74,9 @@ public class Start {
 		if (Ueberpruefer.registrierDatenPruefen(benutzer, vorname, nachname)) {
 			benutzer = Benutzer.benutzerRegistrieren(benutzer, vorname, nachname, adresse);
 		} else {
-
+			ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung/Information"));
+			Response r = rb.build();
+			return r;
 		}
 		if (l < benutzer.length) {
 			ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung"));
@@ -80,7 +84,7 @@ public class Start {
 			Response r = rb.cookie(user).build();
 			return r;
 		} else {
-			ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung/registrieren"));
+			ResponseBuilder rb = Response.seeOther(new URI("/FerienWohnungVerwaltung"));
 			Response r = rb.build();
 			return r;
 		}
@@ -127,8 +131,8 @@ public class Start {
 					+ "\n<body style='background-image: url(/JavaProjectRS/AlphaUpdate.jpg);  background-size: cover;'>";
 			html += HtmlExtension.normalHtmlBannerLogedIn(logindata);
 			html += HtmlExtension.dropdownAdminInterface();
-			html += "<p>Alle Wohnungen sind insgesamt zu: "+ Statistiken.gesamtStatistik() +"</p>"
-					+ "<p>Alle Wohnungen bringen Einnahmen von insgesamt zu: "+ Statistiken.summeEinnahmenAller() +"€</p>";
+			html += "<p>Alle Wohnungen sind insgesamt zu: "+ Statistiken.gesamtStatistik() +" % Ausgelastet</p>"
+					+ "<p>Alle Wohnungen bringen Einnahmen von insgesamt : "+ Statistiken.summeEinnahmenAller() +" â‚¬</p>";
 			html += HtmlExtension.htmlend();
 			return html;
 		} else {
@@ -171,8 +175,8 @@ public class Start {
 			String html = HtmlExtension.normalHtmlHead("Wohnunganlgen");
 			html += HtmlExtension.dropdownScript();
 			html += "\n </head> \n<body>" + "\n<div>" + HtmlExtension.normalHtmlBannerLogedIn(logindata);
-			html += HtmlExtension.dropdownUserMenueHTML() + HtmlExtension.htmlWohnungAnlegen()
-					+ HtmlExtension.htmlend();
+			html += HtmlExtension.dropdownAdminInterface() + HtmlExtension.htmlWohnungAnlegen()
+				 + HtmlExtension.htmlend();
 			return html;
 		}
 		return forbiddenString();
@@ -192,16 +196,16 @@ public class Start {
 			html = HtmlExtension.normalHtmlHead("Gebuchte Wohnungen");
 			html += HtmlExtension.dropdownScript();
 			html += "\n </head> \n<body>" + "\n<div>"
-					+ "\n<div style='background-color: #24292e; padding-top: 12px; padding-bottom: 12px; line-height: 1.5 ;'>"
-					+ "\n<div class='head' style='width: 960px; margin-left: auto; margin-right: auto; line-height: 1.5; font-size: 14px'>"
-					+ "\n<ul style='margin-top: 0; list-style: none; float: left; padding-left: 0; margin-bottom: 0'>"
-					+ "\n<li><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung'>Startseite</a></li>"
-					+ "\n<li><a href='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/buchen'>Katalog</a></li>"
-					+ "\n</ul>" + "\n<ul style='margin: 0; list-style: none; float: right;'>"
-					+ "\n<li style='float: left'><a class='einloggenCss' onclick='userMenue()'>"
-					+ logindata.split("-")[0] + "</a></li>" + "\n</ul>" + "\n</div>" + "\n</div>" + "\n</div>"
-					+ HtmlExtension.dropdownUserMenueHTML() + "</div>";
-
+					+ HtmlExtension.normalHtmlBannerLogedIn(logindata);
+					if (logindata.split("-")[0].equals("Seven") && logindata.split("-")[1].equals("t")) {
+						html += HtmlExtension.dropdownAdminInterface() + "</div>";
+					}else{
+						html += HtmlExtension.dropdownUserMenueHTML() + "</div>";
+					}
+					html += "<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>"
+							+ "\n<script type='text/javascript'> " + "\n function stornieren(id,buchung){"
+							+ "\n var req = $('<form action=/JavaProjectRS/restful-services/FerienWohnungVerwaltung/gebuchteWohnungen method=POST><input type=hidden name=wohnung value='+id+'></input><input type=hidden name=zeit value='+ document.getElementById('zeit' + id + buchung ).innerHTML +'></input></form>');"
+							+ "\nvar t = $(req);" + "\n$('body').append(req);" + "\n$(req).submit();" + "\n}" + "\n</script>";
 			html += "\n<table border='1' align='center' id='table' style='position: relative'>";
 			if (katalog != null) {
 				html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>GrÃ¶ÃŸe mÂ²</td><td>Bild</td><td>Gebuchter Zeitraum</td><td>Aktion</td></tr>";
@@ -215,8 +219,8 @@ public class Start {
 							for (int y = 0; y < 4; y++) {
 								if (y == 3) {
 									html += "\n<td><img src=" + katalog[i][y] + " width='190' height='108'></td>"
-											+ "<td>" + wohnungen[i][x][2] + "</td>" + "<td><button id='" + i
-											+ "'>Stornieren</button></td>";
+											+ "<td><p id='zeit"+ i+x+ "'>" + wohnungen[i][x][2] + "</p></td>" + "<td><button id='" + i
+											+ "' onclick='stornieren(this.id ,"+x+")'>Stornieren</button></td>";
 								} else {
 									html += "\n<td>" + katalog[i][y] + "</td>";
 								}
@@ -237,6 +241,30 @@ public class Start {
 		}
 
 	}
+	
+	@POST
+	@Path("/gebuchteWohnungen")
+	@Produces({ MediaType.TEXT_HTML })
+	// Returns a html page which displays all Houses which are booked from a
+	// specific user
+	public String getStornieren(@CookieParam("LoginData") String logindata, @FormParam("wohnung") String wohnung, @FormParam("zeit") String zeitraum) {
+		if (logedIn(logindata)) {
+			if(Ueberpruefer.stornierPruefer(wohnungen, Integer.parseInt(wohnung), logindata.split("-")[0], logindata.split("-")[1], zeitraum)){
+				Buchen.buchungStornieren(wohnungen, Integer.parseInt(wohnung), zeitraum, logindata.split("-")[0], logindata.split("-")[1]);
+			return HtmlExtension.normalHtmlHead("Status")
+				+ "<meta charset='UTF-8' http-equiv='refresh' content='5;"
+				+ " URL='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnungentfernen'>"
+				+ "</head><body>Buchung wurde Storniert</body>";
+			}else{
+				
+			return HtmlExtension.normalHtmlHead("Status")
+						+ "<meta charset='UTF-8' http-equiv='refresh' content='5;"
+						+ " URL='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnungentfernen'>"
+						+ "</head><body>Buchung konnte nicht Storniert werden, achten Sie darauf, dass Stornierung nur bis 24h im Vorraus mï¿½glich ist</body>";
+			}
+		}
+		return forbiddenString();
+	}
 
 	@POST
 	@Path("/buchen")
@@ -245,6 +273,9 @@ public class Start {
 	// Houses which a not booked between an specific period
 	public String suchErgebnisse(@CookieParam("LoginData") String logindata, @FormParam("von") String von,
 			@FormParam("bis") String bis) throws ParseException {
+		if(logindata == null){
+			logindata = "";
+		}
 		if (Ueberpruefer.datumsValidierung(von + "-" + bis)) {
 			String html;
 			boolean[] freieWohnungen = Ueberpruefer.getFreieWohnungen(wohnungen, von + "-" + bis);
@@ -261,6 +292,10 @@ public class Start {
 				html += HtmlExtension.normalHtmlBannerNotLogedIn();
 				html += HtmlExtension.dropdownLoginHTML();
 			}
+			html += "<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>"
+					+ "\n<script type='text/javascript'> " + "\n function mybooking(id){"
+					+ "\n var req = $('<form action=/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnung method=POST><input type=hidden name=wohnung value='+id+'></input></form>');"
+					+ "\nvar t = $(req);" + "\n$('body').append(req);" + "\n$(req).submit();" + "\n}" + "\n</script>";
 			html += "\n<table border='1' align='center' id='table' style='position: relative'>";
 			if (gesuchteHaueser != null) {
 				html += "\n<tr><td>Hausnummer</td><td>Preis</td><td>Beschreibung</td><td>GrÃ¶ÃŸe mÂ²</td><td>Bild</td></tr>";
@@ -502,12 +537,12 @@ public class Start {
 			return HtmlExtension.normalHtmlHead("Status")
 				+ "<meta charset='UTF-8' http-equiv='refresh' content='5;"
 				+ " URL='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnungentfernen'>"
-				+ "</head><body>Wohnung wurde Gelöscht</body>";
+				+ "</head><body>Wohnung wurde Gelï¿½scht</body>";
 			}else{
 			return HtmlExtension.normalHtmlHead("Status")
 						+ "<meta charset='UTF-8' http-equiv='refresh' content='5;"
 						+ " URL='/JavaProjectRS/restful-services/FerienWohnungVerwaltung/Wohnungentfernen'>"
-						+ "</head><body>Wohnung konnte nicht Gelöscht werden</body>";
+						+ "</head><body>Wohnung konnte nicht Gelï¿½scht werden</body>";
 			}
 		}
 		return forbiddenString();
@@ -540,7 +575,7 @@ public class Start {
 						+ HtmlExtension.normalHtmlBannerLogedIn(logindata)
 						+ HtmlExtension.dropdownAdminInterface()
 						+ "<p>Benutzung in %: "+Statistiken.statistik(Integer.parseInt(wohnung))+ "</p>"
-						+ "<p>Einnahmen der Wohnung: "+Statistiken.summeEinnahmenWohnung(Integer.parseInt(wohnung)) +" €</p>"
+						+ "<p>Einnahmen der Wohnung: "+Statistiken.summeEinnahmenWohnung(Integer.parseInt(wohnung)) +" ï¿½</p>"
 						+ HtmlExtension.htmlend();
 				return html;
 		}
